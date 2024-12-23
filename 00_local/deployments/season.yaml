@@ -1,21 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: season
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: season
   template:
     metadata:
       labels:
-        app: api
+        app: season
     spec:
       containers:
-      - name: api
-        image: sportsdataapi:latest
+      - name: season
+        image: sportsdataseason:latest
         imagePullPolicy: Never
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Local"
         ports:
         - containerPort: 8080
         resources:

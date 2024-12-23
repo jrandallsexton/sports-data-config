@@ -16,6 +16,9 @@ spec:
       - name: contest
         image: sportsdatacontest:latest
         imagePullPolicy: Never
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Local"
         ports:
         - containerPort: 8080
         resources:

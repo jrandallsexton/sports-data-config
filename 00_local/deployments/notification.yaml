@@ -16,6 +16,9 @@ spec:
       - name: notification
         image: sportsdatanotification:latest
         imagePullPolicy: Never
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Local"
         ports:
         - containerPort: 8080
         resources:
