@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: season-service
+spec:
+  selector:
+    app: season
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+  clusterIP: None
