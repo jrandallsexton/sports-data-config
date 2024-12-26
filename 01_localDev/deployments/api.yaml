@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: franchise
-  namespace: local
+  name: api
+  namespace: localdev
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: franchise
+      app: api
   template:
     metadata:
       labels:
-        app: franchise
+        app: api
     spec:
       containers:
-      - name: franchise
-        image: sportsdatafranchise:latest
-        imagePullPolicy: Never
+      - name: api
+        image: sportdeets.azurecr.io/sportsdataapi:361
+        imagePullPolicy: Always
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: "Local"
@@ -29,3 +29,5 @@ spec:
           requests:
             memory: 256Mi
             cpu: "0.2"
+      imagePullSecrets:
+        - name: sportdeetsacrkey

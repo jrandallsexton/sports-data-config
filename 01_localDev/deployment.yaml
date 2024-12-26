@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-nginx
-  namespace: local
+  namespace: localdev
 spec:
   selector:
     matchLabels:

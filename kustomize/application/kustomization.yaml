@@ -1,0 +1,20 @@
+resources:
+  - namespace.yaml
+  - deployments/api.yaml
+  - deployments/contest.yaml
+  - deployments/franchise.yaml
+  - deployments/notification.yaml
+  - deployments/player.yaml
+  - deployments/producer.yaml
+  - deployments/provider.yaml
+  - deployments/season.yaml
+  - deployments/venue.yaml
+  - services/api.yaml
+  - services/contest.yaml
+  - services/franchise.yaml
+  - services/notification.yaml
+  - services/player.yaml
+  - services/producer.yaml
+  - services/provider.yaml
+  - services/season.yaml
+  - services/venue.yaml

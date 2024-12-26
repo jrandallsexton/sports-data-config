@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: franchise
+  name: api
   namespace: local
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: franchise
+      app: api
   template:
     metadata:
       labels:
-        app: franchise
+        app: api
     spec:
       containers:
-      - name: franchise
-        image: sportsdatafranchise:latest
+      - name: api
+        image: sportsdataapi:latest
         imagePullPolicy: Never
         env:
           - name: ASPNETCORE_ENVIRONMENT
