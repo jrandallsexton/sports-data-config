@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: seq
-  namespace: local
+  namespace: localdev
 spec:
   replicas: 1
   selector:
@@ -22,8 +22,6 @@ spec:
             value: "Y"
           - name: ASPNETCORE_ENVIRONMENT
             value: "Local"
-          - name: APPCONFIG_CONNSTR
-            value: "Endpoint=https://sportsdataappconfig.azconfig.io;Id=SNrN;Secret=GEZfgvYgDUQgvlL4r6UZT4pcempHRcPZ2qTQT6UJS6GqQ7ooHAvdJQQJ99BAACHYHv6VhdrZAAACAZAC21CD"
         ports:
         - containerPort: 5341
           name: data-ingest
