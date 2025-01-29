@@ -1,22 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: producer-football-nfl
   namespace: local
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: notification
+      app: producer-football-nfl
   template:
     metadata:
       labels:
-        app: notification
+        app: producer-football-nfl
     spec:
       containers:
-      - name: notification
-        image: sportsdatanotification:latest
+      - name: producer-football-nfl
+        image: sportsdataproducer:latest
         imagePullPolicy: Never
+        command: ["dotnet"]
+        args: ["SportsData.Producer.dll", "-mode", "FootballNfl"]
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: "Local"

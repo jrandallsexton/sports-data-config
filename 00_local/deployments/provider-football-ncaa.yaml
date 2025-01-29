@@ -1,22 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: provider-football-ncaa
   namespace: local
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: notification
+      app: provider-football-ncaa
   template:
     metadata:
       labels:
-        app: notification
+        app: provider-football-ncaa
     spec:
       containers:
-      - name: notification
-        image: sportsdatanotification:latest
+      - name: provider-football-ncaa
+        image: sportsdataprovider:latest
         imagePullPolicy: Never
+        command: ["dotnet"]
+        args: ["SportsData.Provider.dll", "-mode", "FootballNcaa"]
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: "Local"

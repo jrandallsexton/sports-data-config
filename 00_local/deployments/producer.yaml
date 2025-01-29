@@ -4,7 +4,7 @@ metadata:
   name: producer
   namespace: local
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: producer

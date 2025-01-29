@@ -4,7 +4,7 @@ metadata:
   name: provider
   namespace: local
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: provider
@@ -17,6 +17,8 @@ spec:
       - name: provider
         image: sportsdataprovider:latest
         imagePullPolicy: Never
+        command: ["dotnet"]
+        args: ["SportsData.Provider.dll", "-mode", "All"]
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: "Local"

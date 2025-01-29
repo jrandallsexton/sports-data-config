@@ -13,6 +13,7 @@ spec:
     targetPort: 8080
   type: ClusterIP
 ---
+#MSSQL
 apiVersion: v1
 kind: Service
 metadata:
@@ -38,3 +39,30 @@ subsets:
     ports:
       - port: 1433
         name: provider-svc-db
+---
+# MongoDb
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-svc-doc-db
+  namespace: local
+spec:
+  clusterIP: None
+  ports:
+  - protocol: TCP
+    name: provider-svc-doc-db
+    port: 27017
+    targetPort: 27017
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: provider-svc-doc-db
+  namespace: local
+subsets:
+  - addresses:
+      - ip: 192.168.0.3
+    ports:
+      - port: 27017
+        name: provider-svc-doc-db
