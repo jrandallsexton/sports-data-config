@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seq
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seq
+  template:
+    metadata:
+      labels:
+        app: seq
+    spec:
+      containers:
+      - name: seq
+        image: datalust/seq:latest
+        imagePullPolicy: Always
+        env:
+          - name: ACCEPT_EULA
+            value: "Y"
+        ports:
+        - containerPort: 5341
+          name: data-ingest
+        - containerPort: 80
+          name: ui
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
