@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: base
+spec:
+  selector:
+    app: api
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 30080
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-svc-db
+  namespace: base
+spec:
+  clusterIP: None
+  ports:
+  - protocol: TCP
+    name: api-svc-db
+    port: 1433
+    targetPort: 1433
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: api-svc-db
+  namespace: base
+subsets:
+  - addresses:
+      - ip: 192.168.0.3
+    ports:
+      - port: 1433
+        name: api-svc-db

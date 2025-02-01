@@ -20,10 +20,14 @@ spec:
         command: ["dotnet"]
         args: ["SportsData.Producer.dll", "-mode", "FootballNcaa"]
         env:
-          - name: ASPNETCORE_ENVIRONMENT
-            value: "Local"
           - name: APPCONFIG_CONNSTR
-            value: "Endpoint=https://sportsdataappconfig.azconfig.io;Id=SNrN;Secret=GEZfgvYgDUQgvlL4r6UZT4pcempHRcPZ2qTQT6UJS6GqQ7ooHAvdJQQJ99BAACHYHv6VhdrZAAACAZAC21CD"
+            valueFrom:
+              secretKeyRef:
+                name: az-app-config
+                key: connectionstring
+        envFrom:
+          - configMapRef:
+              name: app-config
         ports:
         - containerPort: 8080
         resources:

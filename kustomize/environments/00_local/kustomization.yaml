@@ -1,5 +1,0 @@
-resources:
-  - ../../application
-replicas:
-- name: api
-  count: 1
