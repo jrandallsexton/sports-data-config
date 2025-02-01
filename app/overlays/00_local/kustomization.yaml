@@ -13,9 +13,9 @@ resources:
 - ../../base/apps/venue
 - ../../base/configmaps
 - ../../base/logging
-- ./namespace.yaml
+#- ./namespace.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge
     literals:
-    - ASPNETCORE_ENVIRONMENT=local
+    - ASPNETCORE_ENVIRONMENT=Local
