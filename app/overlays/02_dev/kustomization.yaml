@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev
+resources:
+- ../../base/apps/api
+- ../../base/apps/contest
+- ../../base/apps/franchise
+- ../../base/apps/notification
+- ../../base/apps/player
+- ../../base/apps/producer
+- ../../base/apps/provider
+- ../../base/apps/season
+- ../../base/apps/venue
+- ../../base/configmaps
+- ../../base/logging
+- ../../base/namespaces
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+    - ASPNETCORE_ENVIRONMENT=Dev

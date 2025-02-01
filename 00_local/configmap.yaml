@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-  namespace: local
-data:
-  ASPNETCORE_ENVIRONMENT: Local
-  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "0"
