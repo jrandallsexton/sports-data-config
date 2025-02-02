@@ -16,7 +16,7 @@ spec:
       containers:
       - name: franchise
         image: sportsdatafranchise:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

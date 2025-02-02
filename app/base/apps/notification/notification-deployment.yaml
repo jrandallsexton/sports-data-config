@@ -16,7 +16,7 @@ spec:
       containers:
       - name: notification
         image: sportsdatanotification:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

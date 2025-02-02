@@ -1,0 +1,57 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: local
+resources:
+- ../../base/configmaps
+- ../../base/apps/api
+- ../../base/apps/contest
+- ../../base/apps/franchise
+- ../../base/apps/notification
+- ../../base/apps/player
+- ../../base/apps/producer
+- ../../base/apps/provider
+- ../../base/apps/season
+- ../../base/apps/venue
+- ../../base/logging
+- ../../base/networkpolicies
+- ./namespace.yaml
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+    - ASPNETCORE_ENVIRONMENT=Local
+images:
+  - name: sportsdataapi:latest
+    newName: sportdeets.azurecr.io/sportsdataapi
+    newTag: "505"
+  - name: sportsdatacontest:latest
+    newName: sportdeets.azurecr.io/sportsdatacontest
+    newTag: "202501311746"
+  - name: sportsdatafranchise:latest
+    newName: sportdeets.azurecr.io/sportsdatafranchise
+    newTag: "202501311746"
+  - name: sportsdatanotification:latest
+    newName: sportdeets.azurecr.io/sportsdatanotification
+    newTag: "202501311746"
+  - name: sportsdataplayer:latest
+    newName: sportdeets.azurecr.io/sportsdataplayer
+    newTag: "202501311746"
+  - name: sportsdataproducer:latest
+    newName: sportdeets.azurecr.io/sportsdataproducer
+    newTag: "202501311746"
+  - name: sportsdataprovider:latest
+    newName: sportdeets.azurecr.io/sportsdataprovider
+    newTag: "202501311746"
+  - name: sportsdataseason:latest
+    newName: sportdeets.azurecr.io/sportsdataseason
+    newTag: "202501311746"
+  - name: sportsdatavenue:latest
+    newName: sportdeets.azurecr.io/sportsdatavenue
+    newTag: "202501311746"
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value: [{ name: az-acr-pull }]

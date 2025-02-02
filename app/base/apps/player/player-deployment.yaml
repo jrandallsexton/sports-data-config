@@ -16,7 +16,7 @@ spec:
       containers:
       - name: player
         image: sportsdataplayer:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

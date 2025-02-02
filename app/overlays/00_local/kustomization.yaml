@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: local
 resources:
+- ../../base/configmaps
 - ../../base/apps/api
 - ../../base/apps/contest
 - ../../base/apps/franchise
@@ -11,9 +12,8 @@ resources:
 - ../../base/apps/provider
 - ../../base/apps/season
 - ../../base/apps/venue
-- ../../base/configmaps
 - ../../base/logging
-- ../../base/namespaces
+- ./namespace.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge

@@ -16,7 +16,7 @@ spec:
       containers:
       - name: season
         image: sportsdataseason:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

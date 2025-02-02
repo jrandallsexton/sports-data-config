@@ -16,7 +16,7 @@ spec:
       containers:
       - name: venue
         image: sportsdatavenue:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:
