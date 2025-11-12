@@ -19,5 +19,10 @@ spec:
         expose: true
       websecure:
         expose: true
+      traefik:
+        expose: true
+        port: 9000
+        exposePort: 9000
+        protocol: TCP
     dashboard:
-      enabled: false
+      enabled: true
