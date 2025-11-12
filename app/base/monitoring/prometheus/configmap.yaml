@@ -16,6 +16,14 @@ data:
           domain: 192.168.0.112:8080
           root_url: http://192.168.0.112:8080/grafana/
           serve_from_sub_path: true
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          url: http://loki.loki.svc.cluster.local:3100
+          access: proxy
+          isDefault: false
+          jsonData:
+            maxLines: 1000
 
     prometheus:
       prometheusSpec:
