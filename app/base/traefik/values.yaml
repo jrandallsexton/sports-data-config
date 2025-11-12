@@ -1,0 +1,10 @@
+# app/base/traefik/values.yaml
+
+ports:
+  web:
+    expose: true
+  websecure:
+    expose: true
+
+dashboard:
+  enabled: false
