@@ -16,6 +16,7 @@ spec:
   values:
     # Enable the API and dashboard
     api:
+      enabled: true  # Must explicitly enable the API
       dashboard: true
       insecure: true  # Allow access without TLS (for local dev)
     ports:
