@@ -10,8 +10,10 @@ data:
       adminPassword: "admin" # dev only; replace later
       service:
         type: ClusterIP
+      envFromSecret: ""
       grafana.ini:
         server:
+          domain: 192.168.0.112:8080
           root_url: http://192.168.0.112:8080/grafana/
           serve_from_sub_path: true
 
