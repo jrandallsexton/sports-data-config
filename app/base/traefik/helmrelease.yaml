@@ -14,6 +14,10 @@ spec:
         name: traefik
         namespace: flux-system
   values:
+    # Enable the API and dashboard
+    api:
+      dashboard: true
+      insecure: true  # Allow access without TLS (for local dev)
     ports:
       web:
         port: 8080
@@ -32,5 +36,3 @@ spec:
     ingressRoute:
       dashboard:
         enabled: false  # We're using our own custom IngressRoute
-    dashboard:
-      enabled: true
