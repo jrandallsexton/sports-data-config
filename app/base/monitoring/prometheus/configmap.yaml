@@ -10,15 +10,24 @@ data:
       adminPassword: "admin" # dev only; replace later
       service:
         type: ClusterIP
+      grafana.ini:
+        server:
+          root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+          serve_from_sub_path: true
 
     prometheus:
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
+        externalUrl: http://192.168.0.112:8080/prometheus/
+        routePrefix: /
 
     alertmanager:
       enabled: true
       service:
         type: ClusterIP
+      alertmanagerSpec:
+        externalUrl: http://192.168.0.112:8080/alertmanager/
+        routePrefix: /
 
     defaultRules:
       create: true
