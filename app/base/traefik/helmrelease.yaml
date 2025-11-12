@@ -16,9 +16,15 @@ spec:
   values:
     ports:
       web:
+        port: 8080
         expose: true
+        exposedPort: 8080
+        protocol: TCP
       websecure:
+        port: 8443
         expose: true
+        exposedPort: 8443
+        protocol: TCP
       traefik:
         expose: false  # Don't expose port 9000 externally
         port: 9000
