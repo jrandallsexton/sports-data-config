@@ -8,4 +8,4 @@ resources:
 - prometheus-helmrepository.yaml
 - ../../../app/base/monitoring/prometheus
 - grafana-helmrepository.yaml
-- ../../../app/base/monitoring/loki
+- ../../../app/base/logging/loki
