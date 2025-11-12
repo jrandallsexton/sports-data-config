@@ -6,4 +6,4 @@ resources:
 - traefik-helmrepository.yaml
 - ../../../app/base/traefik
 - prometheus-helmrepository.yaml
-- ../../app/base/monitoring/prometheus
+- ../../../app/base/monitoring/prometheus
