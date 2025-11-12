@@ -20,9 +20,11 @@ spec:
       websecure:
         expose: true
       traefik:
-        expose: true
+        expose: false  # Don't expose port 9000 externally
         port: 9000
-        exposePort: 9000
         protocol: TCP
+    ingressRoute:
+      dashboard:
+        enabled: false  # We're using our own custom IngressRoute
     dashboard:
       enabled: true

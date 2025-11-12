@@ -1,0 +1,23 @@
+# Optional: Add basic auth to the dashboard
+# Generate password hash with: htpasswd -nb admin yourpassword
+# Or use: echo $(htpasswd -nb admin yourpassword) | sed -e s/\\$/\\$\\$/g
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-auth
+  namespace: kube-system
+spec:
+  basicAuth:
+    secret: traefik-dashboard-auth-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: traefik-dashboard-auth-secret
+  namespace: kube-system
+type: Opaque
+stringData:
+  # Default: admin/admin (change this!)
+  # Generate with: htpasswd -nb admin yourpassword
+  users: |
+    admin:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/
