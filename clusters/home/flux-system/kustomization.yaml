@@ -5,3 +5,5 @@ resources:
 - gotk-sync.yaml
 - traefik-helmrepository.yaml
 - ../../../app/base/traefik
+- prometheus-helmrepository.yaml
+- ../../app/base/monitoring/prometheus

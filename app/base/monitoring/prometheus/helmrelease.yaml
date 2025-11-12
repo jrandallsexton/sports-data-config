@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 56.6.0 # or latest known good
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: prometheus-values
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3

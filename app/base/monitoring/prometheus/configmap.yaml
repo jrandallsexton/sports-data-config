@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-values
+  namespace: monitoring
+data:
+  values.yaml: |
+    grafana:
+      enabled: true
+      adminPassword: "admin" # dev only; replace later
+      service:
+        type: ClusterIP
+
+    prometheus:
+      prometheusSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false
+
+    alertmanager:
+      enabled: true
+      service:
+        type: ClusterIP
+
+    defaultRules:
+      create: true
+
+    nameOverride: kps
