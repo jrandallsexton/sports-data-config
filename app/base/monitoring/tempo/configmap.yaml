@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-values
+  namespace: monitoring
+data:
+  values.yaml: |
+    tempo:
+      repository: grafana/tempo
+      tag: 2.6.0
+      
+      # Storage configuration
+      storage:
+        trace:
+          backend: local
+          local:
+            path: /var/tempo/traces
+      
+      # Retention configuration
+      retention: 168h  # 7 days
+      
+      # Compactor configuration
+      compactor:
+        compaction:
+          block_retention: 168h
+      
+      # Receiver configuration - accept traces from various protocols
+      receivers:
+        jaeger:
+          protocols:
+            thrift_http:
+              endpoint: 0.0.0.0:14268
+            grpc:
+              endpoint: 0.0.0.0:14250
+        zipkin:
+          endpoint: 0.0.0.0:9411
+        otlp:
+          protocols:
+            http:
+              endpoint: 0.0.0.0:4318
+            grpc:
+              endpoint: 0.0.0.0:4317
+    
+    # Persistence for traces
+    persistence:
+      enabled: true
+      size: 10Gi
+    
+    # Service configuration
+    service:
+      type: ClusterIP
+    
+    # Resources
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi

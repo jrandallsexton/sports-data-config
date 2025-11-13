@@ -30,6 +30,24 @@ data:
           editable: true
           jsonData:
             maxLines: 1000
+        - name: Tempo
+          type: tempo
+          uid: tempo
+          url: http://tempo.monitoring.svc.cluster.local:3200
+          access: proxy
+          isDefault: false
+          editable: true
+          jsonData:
+            httpMethod: GET
+            tracesToLogs:
+              datasourceUid: loki
+              tags: ['job', 'instance', 'pod', 'namespace']
+            tracesToMetrics:
+              datasourceUid: prometheus
+            serviceMap:
+              datasourceUid: prometheus
+            nodeGraph:
+              enabled: true
 
     prometheus:
       prometheusSpec:

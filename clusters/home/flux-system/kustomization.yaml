@@ -7,5 +7,6 @@ resources:
 - ../../../app/base/traefik
 - prometheus-helmrepository.yaml
 - ../../../app/base/monitoring/prometheus
+- ../../../app/base/monitoring/tempo
 - grafana-helmrepository.yaml
 - ../../../app/base/logging/loki
