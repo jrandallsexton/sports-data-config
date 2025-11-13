@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+  namespace: flux-system
+data:
+  # Traefik LoadBalancer IP and port
+  TRAEFIK_IP: "192.168.0.112"
+  TRAEFIK_PORT: "8080"
+  TRAEFIK_BASE_URL: "http://192.168.0.112:8080"
+  
+  # External service IPs (if applicable to your setup)
+  EXTERNAL_SERVICE_IP: "192.168.0.3"
