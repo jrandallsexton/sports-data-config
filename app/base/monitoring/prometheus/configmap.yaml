@@ -20,6 +20,51 @@ data:
         datasources:
           enabled: true
           defaultDatasourceEnabled: true
+        dashboards:
+          enabled: true
+          defaultFolderName: "General"
+          searchNamespace: ALL
+          provider:
+            foldersFromFilesStructure: true
+      dashboardProviders:
+        dashboardproviders.yaml:
+          apiVersion: 1
+          providers:
+            - name: 'default'
+              orgId: 1
+              folder: 'General'
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/default
+      dashboards:
+        default:
+          # Kubernetes Cluster Monitoring
+          kubernetes-cluster:
+            gnetId: 15757
+            revision: 44
+            datasource: Prometheus
+          # Node Exporter Full
+          node-exporter:
+            gnetId: 1860
+            revision: 37
+            datasource: Prometheus
+          # Traefik Dashboard
+          traefik:
+            gnetId: 17346
+            revision: 9
+            datasource: Prometheus
+          # Kubernetes Pods
+          kubernetes-pods:
+            gnetId: 15760
+            revision: 27
+            datasource: Prometheus
+          # Loki Logs
+          loki-logs:
+            gnetId: 13639
+            revision: 2
+            datasource: Loki
       additionalDataSources:
         - name: Loki
           type: loki
