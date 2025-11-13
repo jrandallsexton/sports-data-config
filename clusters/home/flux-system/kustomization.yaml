@@ -10,3 +10,5 @@ resources:
 - ../../../app/base/monitoring/tempo
 - grafana-helmrepository.yaml
 - ../../../app/base/logging/loki
+- stakater-helmrepository.yaml
+- ../../../app/base/reloader

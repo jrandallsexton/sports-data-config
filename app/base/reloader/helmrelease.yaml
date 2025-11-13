@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reloader
+  namespace: reloader
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: reloader
+      version: '1.x'
+      sourceRef:
+        kind: HelmRepository
+        name: stakater
+        namespace: flux-system
+      interval: 1m
+  values:
+    reloader:
+      watchGlobally: true
+      ignoreNamespaces: ""
+      ignoreSecrets: ""
+      ignoreConfigMaps: ""
+      
+    # Resource limits
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
+    
+    # Single replica is fine
+    replicas: 1
+    
+    # Monitoring
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
