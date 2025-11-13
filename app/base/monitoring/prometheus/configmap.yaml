@@ -25,39 +25,6 @@ data:
           defaultFolderName: "General"
           label: grafana_dashboard
           labelValue: "1"
-      extraInitContainers:
-        - name: download-dashboards
-          image: curlimages/curl:8.5.0
-          command:
-            - /bin/sh
-            - -c
-            - |
-              mkdir -p /var/lib/grafana/dashboards/default
-              # Kubernetes Cluster Overview
-              curl -sfL https://grafana.com/api/dashboards/15757/revisions/44/download -o /var/lib/grafana/dashboards/default/k8s-cluster.json
-              # Node Exporter Full
-              curl -sfL https://grafana.com/api/dashboards/1860/revisions/37/download -o /var/lib/grafana/dashboards/default/node-exporter.json
-              # Traefik Dashboard
-              curl -sfL https://grafana.com/api/dashboards/17346/revisions/9/download -o /var/lib/grafana/dashboards/default/traefik.json
-              # Kubernetes Pods
-              curl -sfL https://grafana.com/api/dashboards/15760/revisions/27/download -o /var/lib/grafana/dashboards/default/k8s-pods.json
-              # Loki Logs
-              curl -sfL https://grafana.com/api/dashboards/13639/revisions/2/download -o /var/lib/grafana/dashboards/default/loki-logs.json
-          volumeMounts:
-            - name: dashboards-default
-              mountPath: /var/lib/grafana/dashboards/default
-      dashboardProviders:
-        dashboardproviders.yaml:
-          apiVersion: 1
-          providers:
-            - name: 'default'
-              orgId: 1
-              folder: 'General'
-              type: file
-              disableDeletion: false
-              editable: true
-              options:
-                path: /var/lib/grafana/dashboards/default
       additionalDataSources:
         - name: Loki
           type: loki
