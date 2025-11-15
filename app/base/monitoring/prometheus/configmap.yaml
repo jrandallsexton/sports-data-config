@@ -25,12 +25,15 @@ data:
           allow_embedding: true
           cookie_secure: false
           cookie_samesite: lax
+          disable_gravatar: true
         cors:
           enabled: true
-          allow_origin: https://admin.sportdeets.com
+          allow_origin: "*"
         dataproxy:
           logging: true
           timeout: 300
+        auth.proxy:
+          enabled: false
         auth.anonymous:
           enabled: false
         auth:
