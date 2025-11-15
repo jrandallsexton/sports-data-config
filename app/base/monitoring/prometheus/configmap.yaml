@@ -18,9 +18,13 @@ data:
         size: 2Gi
       grafana.ini:
         server:
-          domain: 192.168.0.112:8080
-          root_url: http://192.168.0.112:8080/grafana/
+          domain: admin.sportdeets.com
+          root_url: https://admin.sportdeets.com/grafana/
           serve_from_sub_path: true
+        security:
+          allow_embedding: true
+          cookie_secure: false
+          cookie_samesite: lax
       sidecar:
         datasources:
           enabled: true
