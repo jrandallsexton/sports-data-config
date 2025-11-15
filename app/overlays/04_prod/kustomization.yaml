@@ -6,6 +6,3 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
-- ../../base/monitoring
-- ../../base/logging
-- ../../base/traefik
