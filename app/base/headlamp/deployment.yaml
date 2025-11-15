@@ -22,6 +22,8 @@ spec:
           name: http
         env:
         - name: HEADLAMP_BASE_URL
+          value: ""
+        - name: HEADLAMP_CONFIG_BASE_URL
           value: "/headlamp"
         resources:
           requests:
