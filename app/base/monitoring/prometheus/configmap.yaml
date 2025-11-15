@@ -12,10 +12,7 @@ data:
         type: ClusterIP
       envFromSecret: ""
       persistence:
-        enabled: true
-        type: pvc
-        storageClassName: local-path
-        size: 2Gi
+        enabled: false
       defaultDashboardsEnabled: true
       defaultDashboardsTimezone: utc
       grafana.ini:
