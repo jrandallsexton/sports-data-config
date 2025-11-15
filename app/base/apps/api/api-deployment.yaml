@@ -20,7 +20,7 @@ spec:
         image: sportdeets.azurecr.io/sportsdataapi:latest
         imagePullPolicy: Always
         env:
-          - name: CommonConfig__AzureAppConfigurationConnectionString
+          - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
                 name: azure-app-config

@@ -4,7 +4,7 @@ metadata:
   name: producer
   namespace: default
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: producer
@@ -20,7 +20,7 @@ spec:
         image: sportdeets.azurecr.io/sportsdataproducer:latest
         imagePullPolicy: Always
         env:
-          - name: CommonConfig__AzureAppConfigurationConnectionString
+          - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
                 name: azure-app-config

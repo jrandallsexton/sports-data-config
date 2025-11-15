@@ -22,7 +22,7 @@ spec:
         command: ["dotnet"]
         args: ["SportsData.Provider.dll", "-mode", "FootballNcaa"]
         env:
-          - name: CommonConfig__AzureAppConfigurationConnectionString
+          - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
                 name: azure-app-config
