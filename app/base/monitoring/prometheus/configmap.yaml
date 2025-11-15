@@ -18,17 +18,14 @@ data:
         size: 2Gi
       grafana.ini:
         server:
-          domain: admin.sportdeets.com
-          root_url: https://admin.sportdeets.com/grafana/
-          serve_from_sub_path: true
+          domain: grafana.sportdeets.com
+          root_url: https://grafana.sportdeets.com/
+          serve_from_sub_path: false
         security:
           allow_embedding: true
           cookie_secure: false
           cookie_samesite: lax
           disable_gravatar: true
-        cors:
-          enabled: true
-          allow_origin: "*"
         dataproxy:
           logging: true
           timeout: 300
