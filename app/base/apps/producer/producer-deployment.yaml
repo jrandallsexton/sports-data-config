@@ -13,15 +13,17 @@ spec:
       labels:
         app: producer
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: producer
-        image: sportsdataproducer:latest
-        imagePullPolicy: IfNotPresent
+        image: sportdeets.azurecr.io/sportsdataproducer:latest
+        imagePullPolicy: Always
         env:
-          - name: APPCONFIG_CONNSTR
+          - name: CommonConfig__AzureAppConfigurationConnectionString
             valueFrom:
               secretKeyRef:
-                name: az-app-config
+                name: azure-app-config
                 key: connectionstring
         envFrom:
           - configMapRef:

@@ -13,17 +13,19 @@ spec:
       labels:
         app: provider-football-ncaa
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: provider-football-ncaa
-        image: sportsdataprovider:latest
-        imagePullPolicy: IfNotPresent
+        image: sportdeets.azurecr.io/sportsdataprovider:latest
+        imagePullPolicy: Always
         command: ["dotnet"]
         args: ["SportsData.Provider.dll", "-mode", "FootballNcaa"]
         env:
-          - name: APPCONFIG_CONNSTR
+          - name: CommonConfig__AzureAppConfigurationConnectionString
             valueFrom:
               secretKeyRef:
-                name: az-app-config
+                name: azure-app-config
                 key: connectionstring
         envFrom:
           - configMapRef:
