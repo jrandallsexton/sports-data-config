@@ -8,6 +8,16 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
+  - host: admin.sportdeets.com
+    http:
+      paths:
+      - path: /headlamp
+        pathType: Prefix
+        backend:
+          service:
+            name: headlamp
+            port:
+              number: 80
   - http:
       paths:
       - path: /headlamp

@@ -8,7 +8,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/grafana`)
+    - match: PathPrefix(`/grafana`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/grafana`))
       kind: Rule
       services:
         - name: kube-prometheus-stack-grafana
@@ -38,7 +38,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/prometheus`)
+    - match: PathPrefix(`/prometheus`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/prometheus`))
       kind: Rule
       middlewares:
         - name: prometheus-stripprefix
@@ -65,7 +65,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/alertmanager`)
+    - match: PathPrefix(`/alertmanager`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/alertmanager`))
       kind: Rule
       middlewares:
         - name: alertmanager-stripprefix
