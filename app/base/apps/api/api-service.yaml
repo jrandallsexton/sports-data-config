@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   selector:
-    app: api
+    app: api-all
   ports:
   - protocol: TCP
     port: 8080

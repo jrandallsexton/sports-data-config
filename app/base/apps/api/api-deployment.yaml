@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: api-all
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: api-all
   template:
     metadata:
       labels:
-        app: api
+        app: api-all
     spec:
       imagePullSecrets:
       - name: acr-secret
       containers:
-      - name: api
+      - name: api-all
         image: sportdeets.azurecr.io/sportsdataapi:latest
         imagePullPolicy: Always
+        command: ["dotnet"]
+        args: ["SportsData.Api.dll"]
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

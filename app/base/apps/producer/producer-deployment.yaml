@@ -19,6 +19,8 @@ spec:
       - name: producer
         image: sportdeets.azurecr.io/sportsdataproducer:latest
         imagePullPolicy: Always
+        command: ["dotnet"]
+        args: ["SportsData.Producer.dll"]
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:

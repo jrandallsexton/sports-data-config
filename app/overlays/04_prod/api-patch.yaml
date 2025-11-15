@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: api-all
   namespace: default
 spec:
   template:
     spec:
       containers:
-      - name: api
+      - name: api-all
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
