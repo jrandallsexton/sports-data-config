@@ -6,3 +6,7 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
+patchesStrategicMerge:
+- api-patch.yaml
+- producer-patch.yaml
+- provider-patch.yaml

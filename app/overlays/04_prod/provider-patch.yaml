@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-football-ncaa
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: provider-football-ncaa
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"
