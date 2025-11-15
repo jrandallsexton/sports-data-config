@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headlamp
+  namespace: headlamp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headlamp
+  template:
+    metadata:
+      labels:
+        app: headlamp
+    spec:
+      serviceAccountName: headlamp-viewer
+      containers:
+      - name: headlamp
+        image: ghcr.io/headlamp-k8s/headlamp:v0.25.1
+        ports:
+        - containerPort: 4466
+          name: http
+        env:
+        - name: HEADLAMP_BASE_URL
+          value: "/headlamp"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: headlamp
+  namespace: headlamp
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 4466
+    protocol: TCP
+    name: http
+  selector:
+    app: headlamp

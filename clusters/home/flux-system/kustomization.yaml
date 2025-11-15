@@ -12,3 +12,4 @@ resources:
 - ../../../app/base/logging/loki
 - stakater-helmrepository.yaml
 - ../../../app/base/reloader
+- ../../../app/base/headlamp
