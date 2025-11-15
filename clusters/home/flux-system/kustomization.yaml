@@ -12,5 +12,3 @@ resources:
 - ../../../app/base/logging/loki
 - stakater-helmrepository.yaml
 - ../../../app/base/reloader
-- kubernetes-dashboard-helmrepository.yaml
-- ../../../app/base/dashboard
