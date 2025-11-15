@@ -19,8 +19,9 @@ data:
       grafana.ini:
         server:
           domain: grafana.sportdeets.com
-          root_url: "%(protocol)s://%(domain)s/"
+          root_url: https://grafana.sportdeets.com/
           serve_from_sub_path: false
+          protocol: http
         security:
           allow_embedding: true
           cookie_secure: false
