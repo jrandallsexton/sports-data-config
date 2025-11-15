@@ -23,8 +23,8 @@ data:
           enforce_domain: false
         security:
           allow_embedding: true
-          cookie_secure: true
-          cookie_samesite: none
+          cookie_secure: false
+          cookie_samesite: lax
           disable_gravatar: true
         dataproxy:
           logging: true
