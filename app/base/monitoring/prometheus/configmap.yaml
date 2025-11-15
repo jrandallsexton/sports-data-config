@@ -17,9 +17,9 @@ data:
       defaultDashboardsTimezone: utc
       grafana.ini:
         server:
-          domain: grafana.sportdeets.com
-          root_url: https://grafana.sportdeets.com
-          serve_from_sub_path: false
+          domain: admin.sportdeets.com
+          root_url: https://admin.sportdeets.com/grafana
+          serve_from_sub_path: true
           enforce_domain: false
         security:
           allow_embedding: true
@@ -41,9 +41,9 @@ data:
       env:
         GF_SERVER_ENABLE_GZIP: "true"
         GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "false"
-        GF_SERVER_ROOT_URL: "https://grafana.sportdeets.com"
-        GF_SERVER_DOMAIN: "grafana.sportdeets.com"
-        GF_SERVER_SERVE_FROM_SUB_PATH: "false"
+        GF_SERVER_ROOT_URL: "https://admin.sportdeets.com/grafana"
+        GF_SERVER_DOMAIN: "admin.sportdeets.com"
+        GF_SERVER_SERVE_FROM_SUB_PATH: "true"
       sidecar:
         datasources:
           enabled: true
