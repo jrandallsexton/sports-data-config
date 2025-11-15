@@ -25,11 +25,19 @@ data:
           allow_embedding: true
           cookie_secure: false
           cookie_samesite: lax
+        cors:
+          enabled: true
+          allow_origin: https://admin.sportdeets.com
         dataproxy:
           logging: true
           timeout: 300
         auth.anonymous:
           enabled: false
+        auth:
+          disable_login_form: false
+          disable_signout_menu: false
+        users:
+          allow_sign_up: false
       env:
         GF_SERVER_ENABLE_GZIP: "true"
         GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "false"
