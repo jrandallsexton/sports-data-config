@@ -20,6 +20,8 @@ spec:
         env:
         - name: ACCEPT_EULA
           value: "Y"
+        - name: SEQ_FIRSTRUN_ADMINPASSWORD
+          value: "Admin123!"
         - name: SEQ_API_CANONICALURI
           value: "https://admin.sportdeets.com/seq"
         - name: BASE_URI
