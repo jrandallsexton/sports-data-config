@@ -4,6 +4,7 @@ resources:
 - ../../base/namespaces
 - ../../base/configmaps
 - ../../base/serviceaccounts
+- ../../base/logging
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
