@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seq-config
+  namespace: default
+data:
+  Seq.json: |
+    {
+      "api": {
+        "listenUris": ["http://localhost/"]
+      },
+      "webServer": {
+        "basePath": "/seq"
+      }
+    }

@@ -14,6 +14,10 @@ spec:
       labels:
         app: seq
     spec:
+      volumes:
+      - name: seq-config
+        configMap:
+          name: seq-config
       containers:
       - name: seq
         image: datalust/seq:2025.2
@@ -23,7 +27,7 @@ spec:
         - name: SEQ_FIRSTRUN_ADMINPASSWORD
           value: "Admin123!"
         - name: SEQ_BASEURI
-          value: "https://admin.sportdeets.com/seq"
+          value: "https://logging.sportdeets.com"
         ports:
         - containerPort: 80
           name: http
@@ -32,6 +36,8 @@ spec:
         volumeMounts:
         - name: seq-data
           mountPath: /data
+        - name: seq-config
+          mountPath: /etc/seq
         resources:
           limits:
             memory: 2Gi
