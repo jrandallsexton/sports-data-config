@@ -11,4 +11,5 @@ spec:
       kind: Rule
       services:
         - name: seq
+          namespace: default
           port: 80
