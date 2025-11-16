@@ -28,6 +28,8 @@ spec:
           value: "Admin123!"
         - name: SEQ_BASEURI
           value: "https://logging.sportdeets.com"
+        - name: SEQ_API_CANONICALURI
+          value: "https://logging.sportdeets.com"
         ports:
         - containerPort: 80
           name: http
