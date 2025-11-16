@@ -20,7 +20,7 @@ spec:
         image: sportdeets.azurecr.io/sportsdataproducer:1332
         imagePullPolicy: Always
         command: ["dotnet"]
-        args: ["SportsData.Producer.dll"]
+        args: ["SportsData.Producer.dll", "-mode", "FootballNcaa"]
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:
