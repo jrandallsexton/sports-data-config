@@ -17,7 +17,7 @@ spec:
       - name: acr-secret
       containers:
       - name: producer
-        image: sportdeets.azurecr.io/sportsdataproducer:latest
+        image: sportdeets.azurecr.io/sportsdataproducer:1332
         imagePullPolicy: Always
         command: ["dotnet"]
         args: ["SportsData.Producer.dll"]

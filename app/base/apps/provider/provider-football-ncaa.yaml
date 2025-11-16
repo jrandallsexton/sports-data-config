@@ -17,7 +17,7 @@ spec:
       - name: acr-secret
       containers:
       - name: provider-football-ncaa
-        image: sportdeets.azurecr.io/sportsdataprovider:latest
+        image: sportdeets.azurecr.io/sportsdataprovider:1333
         imagePullPolicy: Always
         command: ["dotnet"]
         args: ["SportsData.Provider.dll", "-mode", "FootballNcaa"]
