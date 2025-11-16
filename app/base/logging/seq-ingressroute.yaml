@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: PathPrefix(`/seq`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/seq`))
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/seq`)
       kind: Rule
       services:
         - name: seq
