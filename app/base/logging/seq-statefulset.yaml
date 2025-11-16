@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: seq
+  namespace: default
+spec:
+  serviceName: seq
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seq
+  template:
+    metadata:
+      labels:
+        app: seq
+    spec:
+      containers:
+      - name: seq
+        image: datalust/seq:2024.4
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SEQ_API_CANONICALURI
+          value: "https://admin.sportdeets.com/seq"
+        - name: BASE_URI
+          value: "https://admin.sportdeets.com/seq"
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 5341
+          name: ingestion
+        volumeMounts:
+        - name: seq-data
+          mountPath: /data
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: "2"
+          requests:
+            memory: 512Mi
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: seq-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 10Gi

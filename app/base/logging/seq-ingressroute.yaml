@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: seq-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: PathPrefix(`/seq`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/seq`))
+      kind: Rule
+      services:
+        - name: seq
+          port: 80
+      middlewares:
+        - name: seq-stripprefix
+  tls:
+    certResolver: default
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: seq-stripprefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /seq
