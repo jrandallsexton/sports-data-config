@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sportdeets-workload-identity
+  namespace: default
+  annotations:
+    azure.workload.identity/client-id: "e88c3762-07ab-4323-bcee-b9a5801ee545"  # Client ID of id-sportdeets-workload managed identity
+    azure.workload.identity/tenant-id: "178a8023-00df-4fdf-ad8d-83d25f33dff9"
+  labels:
+    azure.workload.identity/use: "true"
