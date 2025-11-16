@@ -14,7 +14,7 @@ spec:
         name: traefik
         namespace: flux-system
   values:
-    # Completely disable API and dashboard
+    # Disable dashboard to prevent /api conflict
     additionalArguments:
       - "--api=false"
     ports:
