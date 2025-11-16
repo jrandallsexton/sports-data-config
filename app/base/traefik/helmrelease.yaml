@@ -14,10 +14,8 @@ spec:
         name: traefik
         namespace: flux-system
   values:
-    # Enable the API and dashboard only on traefik entrypoint
-    additionalArguments:
-      - "--api=true"
-      - "--api.insecure=false"
+    # Disable API and dashboard to prevent /api path conflict
+    additionalArguments: []
     ports:
       web:
         port: 8080
