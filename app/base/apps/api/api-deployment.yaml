@@ -17,7 +17,7 @@ spec:
       - name: acr-secret
       containers:
       - name: api-all
-        image: sportdeets.azurecr.io/sportsdataapi:1337
+        image: sportdeets.azurecr.io/sportsdataapi:1338
         imagePullPolicy: Always
         command: ["dotnet"]
         args: ["SportsData.Api.dll"]
