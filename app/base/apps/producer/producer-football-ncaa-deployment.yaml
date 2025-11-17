@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-football-ncaa
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producer-football-ncaa
+  template:
+    metadata:
+      labels:
+        app: producer-football-ncaa
+        sport: football-ncaa
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: producer
+        image: sportdeets.azurecr.io/sportsdataproducer:1332
+        imagePullPolicy: Always
+        command: ["dotnet"]
+        args: ["SportsData.Producer.dll", "-mode", "FootballNcaa"]
+        env:
+          - name: APPCONFIG_CONNSTR
+            valueFrom:
+              secretKeyRef:
+                name: azure-app-config
+                key: connectionstring
+          - name: AZURE_TENANT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_TENANT_ID
+          - name: AZURE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_ID
+          - name: AZURE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_SECRET
+        envFrom:
+          - configMapRef:
+              name: app-config
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: "2"
+          requests:
+            memory: 1Gi
+            cpu: "1"
