@@ -28,6 +28,8 @@ spec:
               secretKeyRef:
                 name: azure-app-config
                 key: connectionstring
+          - name: APPCONFIG_LABEL
+            value: "Prod"
           - name: AZURE_TENANT_ID
             valueFrom:
               secretKeyRef:
