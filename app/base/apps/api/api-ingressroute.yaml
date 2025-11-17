@@ -10,5 +10,5 @@ spec:
     - match: Host(`api-int.sportdeets.com`)
       kind: Rule
       services:
-        - name: api-all
+        - name: api-service
           port: 8080
