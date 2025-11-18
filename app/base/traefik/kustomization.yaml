@@ -1,3 +1,4 @@
 resources:
   - helmrelease.yaml
   - traefik-dashboard-ingressroute.yaml
+  - dashboard-basicauth.yaml

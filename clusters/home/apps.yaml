@@ -13,5 +13,5 @@ spec:
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
-      name: api
+      name: api-all
       namespace: default
