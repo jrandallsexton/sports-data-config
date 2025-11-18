@@ -1,0 +1,95 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hangfire-api
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/api/jobs/dashboard`)
+      kind: Rule
+      services:
+        - name: api-service
+          port: 8080
+      middlewares:
+        - name: traefik-dashboard-auth
+          namespace: traefik-system
+        - name: hangfire-api-stripprefix
+          namespace: default
+  tls:
+    certResolver: default
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hangfire-producer
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/producer/jobs/dashboard`)
+      kind: Rule
+      services:
+        - name: producer-svc-football-ncaa
+          port: 80
+      middlewares:
+        - name: traefik-dashboard-auth
+          namespace: traefik-system
+        - name: hangfire-producer-stripprefix
+          namespace: default
+  tls:
+    certResolver: default
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hangfire-provider
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/provider/jobs/dashboard`)
+      kind: Rule
+      services:
+        - name: provider-svc-football-ncaa
+          port: 80
+      middlewares:
+        - name: traefik-dashboard-auth
+          namespace: traefik-system
+        - name: hangfire-provider-stripprefix
+          namespace: default
+  tls:
+    certResolver: default
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: hangfire-api-stripprefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /api/jobs
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: hangfire-producer-stripprefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /producer/jobs
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: hangfire-provider-stripprefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /provider/jobs
