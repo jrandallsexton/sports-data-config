@@ -5,20 +5,16 @@ metadata:
   namespace: default
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
-    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/api/jobs/dashboard`)
+    - match: Host(`admin.sportdeets.com`) && (Path(`/api-jobs`) || PathPrefix(`/api-jobs/`))
       kind: Rule
       services:
         - name: api-service
           port: 8080
       middlewares:
-        - name: traefik-dashboard-auth
-          namespace: traefik-system
-        - name: hangfire-api-stripprefix
+        - name: hangfire-api-replacepath
           namespace: default
-  tls:
-    certResolver: default
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -27,20 +23,16 @@ metadata:
   namespace: default
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
-    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/producer/jobs/dashboard`)
+    - match: Host(`admin.sportdeets.com`) && (Path(`/producer-jobs`) || PathPrefix(`/producer-jobs/`))
       kind: Rule
       services:
         - name: producer-svc-football-ncaa
           port: 80
       middlewares:
-        - name: traefik-dashboard-auth
-          namespace: traefik-system
-        - name: hangfire-producer-stripprefix
+        - name: hangfire-producer-replacepath
           namespace: default
-  tls:
-    certResolver: default
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -49,47 +41,43 @@ metadata:
   namespace: default
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
-    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/provider/jobs/dashboard`)
+    - match: Host(`admin.sportdeets.com`) && (Path(`/provider-jobs`) || PathPrefix(`/provider-jobs/`))
       kind: Rule
       services:
         - name: provider-svc-football-ncaa
           port: 80
       middlewares:
-        - name: traefik-dashboard-auth
-          namespace: traefik-system
-        - name: hangfire-provider-stripprefix
+        - name: hangfire-provider-replacepath
           namespace: default
-  tls:
-    certResolver: default
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: hangfire-api-stripprefix
+  name: hangfire-api-replacepath
   namespace: default
 spec:
-  stripPrefix:
-    prefixes:
-      - /api/jobs
+  replacePathRegex:
+    regex: ^/api-jobs(.*)
+    replacement: /dashboard$1
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: hangfire-producer-stripprefix
+  name: hangfire-producer-replacepath
   namespace: default
 spec:
-  stripPrefix:
-    prefixes:
-      - /producer/jobs
+  replacePathRegex:
+    regex: ^/producer-jobs(.*)
+    replacement: /dashboard$1
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: hangfire-provider-stripprefix
+  name: hangfire-provider-replacepath
   namespace: default
 spec:
-  stripPrefix:
-    prefixes:
-      - /provider/jobs
+  replacePathRegex:
+    regex: ^/provider-jobs(.*)
+    replacement: /dashboard$1
