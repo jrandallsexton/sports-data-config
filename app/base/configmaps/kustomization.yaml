@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - configmap-app.yaml
 - configmap-cluster.yaml
+- reload-trigger.yaml

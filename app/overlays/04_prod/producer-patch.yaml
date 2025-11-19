@@ -1,16 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: provider-football-ncaa
+  name: producer-football-ncaa
   namespace: default
 spec:
   template:
     spec:
       containers:
-      - name: provider-football-ncaa
-        env:
-        - name: APPCONFIG_LABEL
-          value: "Prod"
+      - name: producer
         resources:
           requests:
             memory: 1Gi

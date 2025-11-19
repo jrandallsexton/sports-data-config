@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: provider-football-ncaa
   namespace: default
+  annotations:
+    configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
   replicas: 1
   selector:

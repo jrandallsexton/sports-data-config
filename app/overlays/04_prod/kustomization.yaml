@@ -11,6 +11,7 @@ resources:
 - ../../base/apps/provider
 patchesStrategicMerge:
 - api-patch.yaml
+- producer-patch.yaml
 - provider-patch.yaml
 
 configMapGenerator:
