@@ -9,15 +9,11 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
+- ollama-config.yaml
 patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
 - provider-patch.yaml
-
-configMapGenerator:
-  - name: ollama-config
-    literals:
-      - OLLAMA_HOST_IP=192.168.0.3
 
 replacements:
   - source:
