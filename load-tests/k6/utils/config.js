@@ -7,7 +7,8 @@ export function getConfig() {
   
   let config;
   try {
-    const configFile = open(`../config/${env}.json`);
+    // Use path relative to k6 directory (where k6 run is executed)
+    const configFile = open(`./config/${env}.json`);
     config = JSON.parse(configFile);
   } catch (e) {
     console.error(`Failed to load config for environment: ${env}`);
