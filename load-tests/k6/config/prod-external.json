@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://api.sportdeets.com",
+  "description": "Production - external (through APIM, rate limited to 5000 req/min)"
+}

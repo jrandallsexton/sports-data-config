@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://api-int.sportdeets.com",
+  "description": "Production cluster - internal (direct to cluster, no APIM rate limits)"
+}
