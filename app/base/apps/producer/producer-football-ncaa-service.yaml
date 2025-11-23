@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: producer-svc-football-ncaa
   namespace: default
+  labels:
+    app: producer-football-ncaa
 spec:
   selector:
     app: producer-football-ncaa

@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: provider-svc-football-ncaa
   namespace: default
+  labels:
+    app: provider-football-ncaa
 spec:
   selector:
     app: provider-football-ncaa

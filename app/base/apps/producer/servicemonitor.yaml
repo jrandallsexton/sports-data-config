@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: producer-metrics
+  namespace: default
+  labels:
+    app: producer-football-ncaa
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: producer-football-ncaa
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

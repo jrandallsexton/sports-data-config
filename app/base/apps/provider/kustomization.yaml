@@ -4,3 +4,4 @@ resources:
 - provider-football-ncaa.yaml
 - provider-svc-football-ncaa.yaml
 - provider-doc-db.yaml
+- servicemonitor.yaml
