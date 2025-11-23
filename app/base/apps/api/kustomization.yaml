@@ -4,3 +4,4 @@ resources:
 - api-deployment.yaml
 - api-service.yaml
 - api-ingressroute.yaml
+- servicemonitor.yaml
