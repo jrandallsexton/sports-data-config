@@ -9,6 +9,7 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
+- ../../base/monitoring/umami
 - ollama-config.yaml
 patchesStrategicMerge:
 - api-patch.yaml
