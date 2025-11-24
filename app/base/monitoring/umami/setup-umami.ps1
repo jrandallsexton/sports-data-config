@@ -28,6 +28,9 @@ if (-not (Test-Path $commonVarsPath)) {
 Write-Host "[INFO] Loading configuration from: $commonVarsPath" -ForegroundColor Yellow
 . $commonVarsPath
 
+# Load System.Web assembly for URL encoding
+Add-Type -AssemblyName System.Web
+
 # Validate required variables
 if (-not $script:umamiDbHost) {
     Write-Host "❌ Missing `$umamiDbHost in _common-variables.ps1" -ForegroundColor Red
@@ -67,7 +70,9 @@ Write-Host ""
 Write-Host "[STEP 1/2] Creating Kubernetes secret for Umami database..." -ForegroundColor Cyan
 Write-Host ""
 
-$databaseUrl = "postgresql://$($script:umamiDbUser):$($script:umamiDbPassword)@$($script:umamiDbHost):$($script:umamiDbPort)/$($script:umamiDbName)"
+# URL-encode the password to handle special characters like ?, @, etc.
+$encodedPassword = [System.Web.HttpUtility]::UrlEncode($script:umamiDbPassword)
+$databaseUrl = "postgresql://$($script:umamiDbUser):${encodedPassword}@$($script:umamiDbHost):$($script:umamiDbPort)/$($script:umamiDbName)"
 
 kubectl create secret generic umami-db-secret `
     --from-literal=database-url=$databaseUrl `

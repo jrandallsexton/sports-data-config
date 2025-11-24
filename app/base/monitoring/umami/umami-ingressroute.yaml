@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/analytics`)
+    - match: Host(`analytics.sportdeets.com`)
       kind: Rule
       services:
         - name: umami
@@ -22,7 +22,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/analytics`)
+    - match: Host(`analytics.sportdeets.com`)
       kind: Rule
       services:
         - name: umami
