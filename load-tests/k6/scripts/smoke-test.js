@@ -41,13 +41,18 @@ export default function () {
 }
 
 export function handleSummary(data) {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+  const resultFile = `./results/smoke-test-${timestamp}.json`;
+  
   console.log(`\n✅ Smoke Test Complete for ${config.description}`);
   console.log(`   Base URL: ${config.baseUrl}`);
   console.log(`   Total Requests: ${data.metrics.http_reqs.values.count}`);
   console.log(`   Failed Requests: ${data.metrics.http_req_failed.values.passes || 0}`);
   console.log(`   Avg Response Time: ${data.metrics.http_req_duration.values.avg.toFixed(2)}ms`);
+  console.log(`   Results saved to: ${resultFile}`);
   
   return {
     'stdout': JSON.stringify(data, null, 2),
+    [resultFile]: JSON.stringify(data, null, 2),
   };
 }

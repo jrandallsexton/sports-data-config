@@ -84,7 +84,12 @@ export function handleSummary(data) {
   
   console.log(`\n   ${thresholdsPassed ? '✅ All thresholds passed' : '❌ Some thresholds failed'}`);
   
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+  const resultFile = `./results/load-test-${timestamp}.json`;
+  console.log(`   Results saved to: ${resultFile}`);
+  
   return {
     'stdout': JSON.stringify(data, null, 2),
+    [resultFile]: JSON.stringify(data, null, 2),
   };
 }

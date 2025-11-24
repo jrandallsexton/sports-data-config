@@ -4,5 +4,5 @@ metadata:
   name: app-config
   namespace: default
 data:
-  ASPNETCORE_ENVIRONMENT: "default"
+  ASPNETCORE_ENVIRONMENT: "Development"
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "0"

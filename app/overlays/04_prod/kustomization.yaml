@@ -15,6 +15,11 @@ patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
 - provider-patch.yaml
+configMapGenerator:
+  - name: app-config
+    behavior: merge
+    literals:
+    - ASPNETCORE_ENVIRONMENT=Production
 
 replacements:
   - source:

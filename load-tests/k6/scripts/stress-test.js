@@ -58,7 +58,12 @@ export function handleSummary(data) {
   console.log(`   - Pod CPU/Memory usage (kubectl top pods)`);
   console.log(`   - HPA scaling events (kubectl get hpa --watch)`);
   
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+  const resultFile = `./results/stress-test-${timestamp}.json`;
+  console.log(`\n   Results saved to: ${resultFile}`);
+  
   return {
     'stdout': JSON.stringify(data, null, 2),
+    [resultFile]: JSON.stringify(data, null, 2),
   };
 }
