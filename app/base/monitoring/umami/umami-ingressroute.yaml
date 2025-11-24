@@ -9,8 +9,6 @@ spec:
   routes:
     - match: Host(`admin.sportdeets.com`) && PathPrefix(`/analytics`)
       kind: Rule
-      middlewares:
-        - name: umami-strip-prefix
       services:
         - name: umami
           port: 3000
@@ -26,20 +24,8 @@ spec:
   routes:
     - match: Host(`admin.sportdeets.com`) && PathPrefix(`/analytics`)
       kind: Rule
-      middlewares:
-        - name: umami-strip-prefix
       services:
         - name: umami
           port: 3000
   tls:
     certResolver: letsencrypt
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: umami-strip-prefix
-  namespace: default
-spec:
-  stripPrefix:
-    prefixes:
-      - /analytics
