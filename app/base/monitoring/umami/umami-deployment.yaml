@@ -33,6 +33,8 @@ spec:
                 name: umami-secret
                 key: app-secret
                 optional: true
+          - name: BASE_PATH
+            value: "/analytics"
         ports:
         - containerPort: 3000
           name: http
