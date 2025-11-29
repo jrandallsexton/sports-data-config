@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: sportdeets.azurecr.io/sportsdataproducer:1625
+        image: sportdeets.azurecr.io/sportsdataproducer:1627
         resources:
           requests:
             memory: 1Gi
