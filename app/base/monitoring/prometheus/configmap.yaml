@@ -29,6 +29,9 @@ data:
           cookie_secure: false
           cookie_samesite: lax
           disable_gravatar: true
+        cors:
+          allow_credentials: true
+          allowed_origins: https://admin.sportdeets.com
         dataproxy:
           logging: true
           timeout: 300
