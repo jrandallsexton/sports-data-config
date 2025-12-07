@@ -24,6 +24,10 @@ spec:
             value: "Admin"
           - name: GF_AUTH_DISABLE_LOGIN_FORM
             value: "true"
+          - name: GF_SERVER_ROOT_URL
+            value: "https://admin.sportdeets.com/grafana"
+          - name: GF_SERVER_SERVE_FROM_SUB_PATH
+            value: "true"
         ports:
         - containerPort: 3000
         resources:
