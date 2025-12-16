@@ -24,14 +24,22 @@ data:
           root_url: https://admin.sportdeets.com/grafana
           serve_from_sub_path: true
           enforce_domain: false
+          enable_gzip: true
+          protocol: http
+          router_logging: true
         security:
           allow_embedding: true
           cookie_secure: false
           cookie_samesite: lax
           disable_gravatar: true
+          csrf_enabled: false
+          disable_initial_admin_creation: false
+          admin_user: admin
+          admin_password: admin
+          allowed_origins: https://admin.sportdeets.com
         cors:
           allow_credentials: true
-          allowed_origins: https://admin.sportdeets.com
+          allowed_origins: "*"
         dataproxy:
           logging: true
           timeout: 300
@@ -42,6 +50,8 @@ data:
         auth:
           disable_login_form: false
           disable_signout_menu: false
+          oauth_skip_org_role_update_sync: false
+          oauth_allow_insecure_email_lookup: true
         users:
           allow_sign_up: false
       env:
@@ -50,6 +60,9 @@ data:
         GF_SERVER_ROOT_URL: "https://admin.sportdeets.com/grafana"
         GF_SERVER_DOMAIN: "admin.sportdeets.com"
         GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+        GF_SECURITY_ADMIN_PASSWORD: "admin"
+        GF_SECURITY_ADMIN_USER: "admin"
+        GF_AUTH_DISABLE_LOGIN_FORM: "false"
       sidecar:
         datasources:
           enabled: true
