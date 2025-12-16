@@ -35,7 +35,6 @@ data:
           csrf_enabled: false
           disable_initial_admin_creation: false
           admin_user: admin
-          admin_password: admin
           allowed_origins: https://admin.sportdeets.com
         cors:
           allow_credentials: true
