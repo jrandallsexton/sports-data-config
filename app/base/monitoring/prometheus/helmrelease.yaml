@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 56.6.0 # or latest known good
+      version: 61.3.0 # Upgrading to fix legacy dashboard queries
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
