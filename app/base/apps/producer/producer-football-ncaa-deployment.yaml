@@ -64,14 +64,5 @@ spec:
             cpu: "1"
       volumes:
       - name: logs-volume
-        csi:
-          driver: smb.csi.k8s.io
-          readOnly: false
-          volumeAttributes:
-            source: "//192.168.0.3/sdprod-backups/logs"
-            csi.storage.k8s.io/node-stage-secret-name: "smb-creds"
-            csi.storage.k8s.io/node-stage-secret-namespace: "default"
-            csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
-            csi.storage.k8s.io/node-publish-secret-namespace: "default"
-          nodePublishSecretRef:
-            name: smb-creds
+        persistentVolumeClaim:
+          claimName: logs-pvc
