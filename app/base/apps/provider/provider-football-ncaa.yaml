@@ -61,6 +61,11 @@ spec:
             cpu: "1"
       volumes:
       - name: logs-volume
-        hostPath:
-          path: /run/desktop/mnt/host/c/Projects/sports-data/logs
-          type: DirectoryOrCreate
+        csi:
+          driver: smb.csi.k8s.io
+          readOnly: false
+          volumeAttributes:
+            source: "//192.168.0.3/sdprod-backups/logs"
+          nodeStageSecretRef:
+            name: smb-creds
+            namespace: default

@@ -12,4 +12,6 @@ resources:
 - ../../../app/base/logging/loki
 - stakater-helmrepository.yaml
 - ../../../app/base/reloader
-- ../../../app/base/headlamp
+- - ../../../app/base/headlamp
+- csi-driver-smb-helmrepository.yaml
+- ../../../app/base/smb-csi-driver
