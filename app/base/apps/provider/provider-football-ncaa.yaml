@@ -68,4 +68,3 @@ spec:
             source: "//192.168.0.3/sdprod-backups/logs"
           nodePublishSecretRef:
             name: smb-creds
-            namespace: default
