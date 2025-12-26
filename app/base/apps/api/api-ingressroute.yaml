@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`api-int.sportdeets.com`) || Host(`67.7.88.82`)
+    - match: Host(`api-int.sportdeets.com`) || Host(`67.7.88.82`) || Host(`api.sportdeets.com`)
       kind: Rule
       services:
         - name: api-service

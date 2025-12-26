@@ -49,6 +49,9 @@ spec:
               name: app-config
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - name: logs-volume
+          mountPath: /app/logs
         resources:
           limits:
             memory: 512Mi
@@ -56,3 +59,8 @@ spec:
           requests:
             memory: 256Mi
             cpu: "0.2"
+      volumes:
+      - name: logs-volume
+        hostPath:
+          path: /run/desktop/mnt/host/c/Projects/sports-data/logs
+          type: DirectoryOrCreate

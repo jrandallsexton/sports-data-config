@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: global-alert-config
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  route:
+    groupBy: ['alertname']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+    receiver: 'email-notifications'
+    routes:
+    - matchers:
+      - name: severity
+        value: critical
+      receiver: 'email-notifications'
+
+  receivers:
+  - name: 'email-notifications'
+    emailConfigs:
+    - to: 'admin@sportdeets.com'            # <--- CHANGE THIS: Where to send alerts
+      from: 'alerts@sportdeets.com'         # <--- CHANGE THIS: Sender address
+      smarthost: 'mail.privateemail.com:587' # Namecheap PrivateEmail SMTP
+      authUsername: 'alerts@sportdeets.com' # <--- CHANGE THIS: Sender username
+      authPassword:
+        name: email-alert-secret
+        key: password
+      requireTLS: true
+      sendResolved: true

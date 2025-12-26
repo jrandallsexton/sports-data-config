@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: test-critical-alert
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+  - name: test-alert
+    rules:
+    - alert: TestCriticalAlert
+      expr: vector(1)
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "This is a Test Critical Alert"
+        description: "This alert was manually created to test the email notification pipeline. You can delete it after receiving the email."
