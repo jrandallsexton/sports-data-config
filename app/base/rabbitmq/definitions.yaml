@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-definitions
+  namespace: messaging
+data:
+  definitions.json: |
+    {
+      "users": [
+        {
+          "name": "sportsdata",
+          "password_hash": "juIRFAdVN6wSHFY9tIMDjwwBF+QW6zgy+vFK+9pJSJqpPhpv",
+          "hashing_algorithm": "rabbit_password_hashing_sha256",
+          "tags": ["administrator"]
+        }
+      ],
+      "vhosts": [
+        {
+          "name": "/"
+        }
+      ],
+      "permissions": [
+        {
+          "user": "sportsdata",
+          "vhost": "/",
+          "configure": ".*",
+          "write": ".*",
+          "read": ".*"
+        }
+      ]
+    }

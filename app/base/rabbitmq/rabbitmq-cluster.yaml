@@ -18,6 +18,7 @@ spec:
       cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
       cluster_formation.k8s.address_type = hostname
       vm_memory_high_watermark.relative = 0.8
+      load_definitions = /etc/rabbitmq-definitions/definitions.json
   
   persistence:
     storageClassName: local-path
@@ -43,3 +44,19 @@ spec:
                   values:
                     - rabbitmq
             topologyKey: kubernetes.io/hostname
+  
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: rabbitmq
+                volumeMounts:
+                  - name: definitions
+                    mountPath: /etc/rabbitmq-definitions
+                    readOnly: true
+            volumes:
+              - name: definitions
+                configMap:
+                  name: rabbitmq-definitions

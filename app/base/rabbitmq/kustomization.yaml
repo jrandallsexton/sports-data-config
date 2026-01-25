@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - operator.yaml
   - namespace.yaml
+  - definitions.yaml
   - rabbitmq-cluster.yaml
   - servicemonitor.yaml
