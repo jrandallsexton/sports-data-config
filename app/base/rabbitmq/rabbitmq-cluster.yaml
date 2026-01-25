@@ -8,6 +8,10 @@ spec:
   
   image: rabbitmq:3.13-management
   
+  secretBackend:
+    externalSecret:
+      name: rabbitmq-admin
+  
   rabbitmq:
     additionalPlugins:
       - rabbitmq_management
@@ -43,22 +47,3 @@ spec:
                   values:
                     - rabbitmq
             topologyKey: kubernetes.io/hostname
-  
-  override:
-    statefulSet:
-      spec:
-        template:
-          spec:
-            containers:
-              - name: rabbitmq
-                env:
-                  - name: RABBITMQ_DEFAULT_USER
-                    valueFrom:
-                      secretKeyRef:
-                        name: rabbitmq-admin
-                        key: username
-                  - name: RABBITMQ_DEFAULT_PASS
-                    valueFrom:
-                      secretKeyRef:
-                        name: rabbitmq-admin
-                        key: password
