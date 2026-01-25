@@ -15,3 +15,4 @@ resources:
 - ../../../app/base/headlamp
 - csi-driver-smb-helmrepository.yaml
 - ../../../app/base/smb-csi-driver
+- rabbitmq-helmrepository.yaml
