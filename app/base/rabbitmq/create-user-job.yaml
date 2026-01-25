@@ -24,7 +24,7 @@ spec:
               sleep 10
       containers:
         - name: create-user
-          image: rabbitmq:3.13-management
+          image: curlimages/curl:8.11.1
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -36,22 +36,39 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-admin
                   key: password
+            - name: DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: username
+            - name: DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: password
           command:
             - sh
             - -c
             - |
-              echo "Creating user $RABBITMQ_USERNAME..."
+              echo "Creating user $RABBITMQ_USERNAME via HTTP API..."
               
-              # Delete user if exists (idempotent)
-              rabbitmqadmin -H rabbitmq.messaging.svc.cluster.local -u $(cat /var/run/secrets/kubernetes.io/serviceaccount/token) delete user name=$RABBITMQ_USERNAME 2>/dev/null || true
+              # Create user with password hash
+              HASH=$(echo -n "$RABBITMQ_PASSWORD" | base64 | tr -d '\n' | base64)
               
-              # Create user
-              rabbitmqctl -n rabbit@rabbitmq-server-0.rabbitmq-nodes.messaging add_user "$RABBITMQ_USERNAME" "$RABBITMQ_PASSWORD" || echo "User may already exist"
+              curl -u "$DEFAULT_USER:$DEFAULT_PASS" \
+                -X PUT \
+                -H "Content-Type: application/json" \
+                -d "{\"password\":\"$RABBITMQ_PASSWORD\",\"tags\":\"administrator\"}" \
+                http://rabbitmq.messaging.svc.cluster.local:15672/api/users/$RABBITMQ_USERNAME
               
-              # Set admin tag
-              rabbitmqctl -n rabbit@rabbitmq-server-0.rabbitmq-nodes.messaging set_user_tags "$RABBITMQ_USERNAME" administrator
+              echo ""
+              echo "Setting permissions for $RABBITMQ_USERNAME..."
               
-              # Grant permissions
-              rabbitmqctl -n rabbit@rabbitmq-server-0.rabbitmq-nodes.messaging set_permissions -p / "$RABBITMQ_USERNAME" ".*" ".*" ".*"
+              curl -u "$DEFAULT_USER:$DEFAULT_PASS" \
+                -X PUT \
+                -H "Content-Type: application/json" \
+                -d '{"configure":".*","write":".*","read":".*"}' \
+                http://rabbitmq.messaging.svc.cluster.local:15672/api/permissions/%2F/$RABBITMQ_USERNAME
               
+              echo ""
               echo "User $RABBITMQ_USERNAME created successfully!"
