@@ -20,7 +20,7 @@ spec:
       vm_memory_high_watermark.relative = 0.8
   
   persistence:
-    storageClassName: smb
+    storageClassName: local-path
     storage: 50Gi
   
   resources:
