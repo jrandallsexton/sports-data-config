@@ -8,10 +8,6 @@ spec:
   
   image: rabbitmq:3.13-management
   
-  secretBackend:
-    externalSecret:
-      name: rabbitmq-admin
-  
   rabbitmq:
     additionalPlugins:
       - rabbitmq_management
