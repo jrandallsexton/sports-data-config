@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: local
 resources:
 - ../../base/configmaps
+- ../../base/rabbitmq
 - ../../base/apps/api
 - ../../base/apps/contest
 - ../../base/apps/franchise
