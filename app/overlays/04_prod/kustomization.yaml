@@ -4,6 +4,7 @@ resources:
 - ../../base/namespaces
 - ../../base/configmaps
 - ../../base/serviceaccounts
+- ../../base/rabbitmq
 - ../../base/logging
 - ../../base/ollama
 - ../../base/apps/api

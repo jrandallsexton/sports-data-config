@@ -10,7 +10,7 @@ spec:
   - name: node-health
     rules:
     - alert: NodeDown
-      expr: up{job="node-exporter"} == 0
+      expr: up{job=~".*node-exporter.*"} == 0
       for: 5m
       labels:
         severity: critical
@@ -25,4 +25,13 @@ spec:
         severity: critical
       annotations:
         summary: "Kubernetes Node {{ $labels.node }} is not ready"
+        description: "Node {{ $labels.node }} has been in NotReady state for more than 5 minutes."
+
+    - alert: KubernetesNodeNotReady
+      expr: kube_node_status_condition{condition="Ready",status="false"} != 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Kubernetes Node {{ $labels.node }} is not ready (status=false)"
         description: "Node {{ $labels.node }} has been in NotReady state for more than 5 minutes."
