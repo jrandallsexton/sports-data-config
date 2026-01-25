@@ -5,5 +5,4 @@ resources:
   - operator.yaml
   - namespace.yaml
   - rabbitmq-cluster.yaml
-  - create-user-job.yaml
   - servicemonitor.yaml
