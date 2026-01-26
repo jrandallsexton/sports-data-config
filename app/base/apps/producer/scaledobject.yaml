@@ -21,7 +21,6 @@ spec:
             AND queue = 'default'
         targetQueryValue: "10"                # Scale up if >10 jobs per pod
         activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
-        connectionFromEnv: HANGFIRE_CONNECTION_STRING
       authenticationRef:
         name: producer-hangfire-trigger-auth
 ---
