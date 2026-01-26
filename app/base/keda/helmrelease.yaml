@@ -1,0 +1,65 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keda
+  namespace: flux-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: keda
+      version: '2.16.x'
+      sourceRef:
+        kind: HelmRepository
+        name: kedacore
+        namespace: flux-system
+      interval: 12h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  targetNamespace: keda
+  values:
+    # Enable Prometheus metrics
+    prometheus:
+      metricServer:
+        enabled: true
+      operator:
+        enabled: true
+    
+    # Resource limits
+    resources:
+      operator:
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      metricServer:
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      webhooks:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
+    
+    # Pod disruption budgets
+    podDisruptionBudget:
+      operator:
+        minAvailable: 1
+      metricServer:
+        minAvailable: 1
+    
+    # Enable service monitors for Prometheus scraping
+    serviceMonitor:
+      enabled: true

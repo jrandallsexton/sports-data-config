@@ -5,6 +5,7 @@ resources:
 - ../../base/configmaps
 - ../../base/serviceaccounts
 - ../../base/rabbitmq
+- ../../base/keda
 - ../../base/logging
 - ../../base/ollama
 - ../../base/apps/api

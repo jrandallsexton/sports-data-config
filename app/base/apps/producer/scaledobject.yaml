@@ -1,0 +1,37 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: producer-football-ncaa-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: producer-football-ncaa
+  pollingInterval: 15    # Check every 15 seconds
+  cooldownPeriod: 300    # Wait 5 min before scaling down
+  minReplicaCount: 2     # Baseline capacity (current production state)
+  maxReplicaCount: 12    # Cap to protect PostgreSQL - tune based on DB capacity
+  triggers:
+    - type: postgresql
+      metadata:
+        # Query Hangfire database for pending jobs
+        query: >-
+          SELECT COUNT(*)::int
+          FROM hangfire.jobqueue
+          WHERE fetchedat IS NULL
+            AND queue = 'default'
+        targetQueryValue: "10"                # Scale up if >10 jobs per pod
+        activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
+        connectionFromEnv: HANGFIRE_CONNECTION_STRING
+      authenticationRef:
+        name: producer-hangfire-trigger-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: producer-hangfire-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: connectionString
+      name: hangfire-connection
+      key: connectionstring

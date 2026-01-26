@@ -5,3 +5,4 @@ resources:
 - provider-svc-football-ncaa.yaml
 - provider-doc-db.yaml
 - servicemonitor.yaml
+- scaledobject.yaml

@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: provider-football-ncaa-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: provider-football-ncaa
+  pollingInterval: 30    # Check every 30 seconds (less aggressive than Producer)
+  cooldownPeriod: 600    # Wait 10 min before scaling down
+  minReplicaCount: 2     # Baseline capacity
+  maxReplicaCount: 5     # Conservative limit - ESPN has no rate limits but be respectful
+  triggers:
+    - type: rabbitmq
+      metadata:
+        protocol: auto
+        queueName: SportsData.Core.Messages:ProcessGameJob
+        mode: QueueLength
+        value: "50"                           # Scale up if >50 messages per pod
+        activationValue: "1"                  # Scale from minReplicas if any messages
+        host: amqp://default_user_W-nWzltCrP2SJDoOmMR:dTGOTYOp-Ag3_0rU265rVrgSby2cYsrp@rabbitmq.messaging.svc.cluster.local:5672/

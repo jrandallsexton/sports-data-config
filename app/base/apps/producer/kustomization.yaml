@@ -4,3 +4,4 @@ resources:
 - producer-football-ncaa-deployment.yaml
 - producer-football-ncaa-service.yaml
 - servicemonitor.yaml
+- scaledobject.yaml
