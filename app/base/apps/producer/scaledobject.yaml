@@ -33,5 +33,5 @@ metadata:
 spec:
   secretTargetRef:
     - parameter: connectionString
-      name: hangfire-connection
+      name: producer-football-ncaa-hangfire
       key: connectionstring
