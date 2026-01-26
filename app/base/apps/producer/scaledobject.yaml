@@ -31,6 +31,21 @@ metadata:
   namespace: default
 spec:
   secretTargetRef:
-    - parameter: connectionString
-      name: producer-football-ncaa-hangfire
-      key: connectionstring
+    - parameter: host
+      name: producer-hangfire-pg-params
+      key: host
+    - parameter: port
+      name: producer-hangfire-pg-params
+      key: port
+    - parameter: userName
+      name: producer-hangfire-pg-params
+      key: username
+    - parameter: password
+      name: producer-hangfire-pg-params
+      key: password
+    - parameter: dbName
+      name: producer-hangfire-pg-params
+      key: database
+    - parameter: sslmode
+      name: producer-hangfire-pg-params
+      key: sslmode
