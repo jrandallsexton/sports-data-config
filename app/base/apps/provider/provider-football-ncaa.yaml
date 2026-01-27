@@ -7,7 +7,7 @@ metadata:
     # TEMP: Disabled during load test to prevent cycling
     # configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
-  replicas: 2
+  # replicas managed by KEDA ScaledObject
   selector:
     matchLabels:
       app: provider-football-ncaa
