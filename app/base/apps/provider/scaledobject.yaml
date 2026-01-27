@@ -6,16 +6,46 @@ metadata:
 spec:
   scaleTargetRef:
     name: provider-football-ncaa
-  pollingInterval: 30    # Check every 30 seconds (less aggressive than Producer)
-  cooldownPeriod: 600    # Wait 10 min before scaling down
+  pollingInterval: 15    # Check every 15 seconds
+  cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 2     # Baseline capacity
-  maxReplicaCount: 5     # Conservative limit - ESPN has no rate limits but be respectful
+  maxReplicaCount: 12    # Match Producer capacity for load testing
   triggers:
-    - type: rabbitmq
+    - type: postgresql
       metadata:
-        protocol: auto
-        queueName: SportsData.Core.Messages:ProcessGameJob
-        mode: QueueLength
-        value: "50"                           # Scale up if >50 messages per pod
-        activationValue: "1"                  # Scale from minReplicas if any messages
-        host: amqp://default_user_W-nWzltCrP2SJDoOmMR:dTGOTYOp-Ag3_0rU265rVrgSby2cYsrp@rabbitmq.messaging.svc.cluster.local:5672/
+        # Query Hangfire database for pending jobs
+        query: >-
+          SELECT COUNT(*)::int
+          FROM hangfire.jobqueue
+          WHERE fetchedat IS NULL
+            AND queue = 'default'
+        targetQueryValue: "10"                # Scale up if >10 jobs per pod
+        activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
+      authenticationRef:
+        name: provider-hangfire-trigger-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: provider-hangfire-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: provider-hangfire-pg-params
+      key: host
+    - parameter: port
+      name: provider-hangfire-pg-params
+      key: port
+    - parameter: userName
+      name: provider-hangfire-pg-params
+      key: username
+    - parameter: password
+      name: provider-hangfire-pg-params
+      key: password
+    - parameter: dbName
+      name: provider-hangfire-pg-params
+      key: database
+    - parameter: sslmode
+      name: provider-hangfire-pg-params
+      key: sslmode
