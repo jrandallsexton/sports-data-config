@@ -4,7 +4,8 @@ metadata:
   name: producer-football-ncaa
   namespace: default
   annotations:
-    configmap.reloader.stakater.com/reload: "reload-trigger"
+    # TEMP: Disabled during load test to prevent cycling
+    # configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
   replicas: 2
   selector:
