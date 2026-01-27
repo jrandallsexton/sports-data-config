@@ -54,11 +54,11 @@ spec:
           mountPath: /app/logs
         resources:
           limits:
-            memory: 512Mi
-            cpu: "1"
+            memory: 1Gi
+            cpu: "2"
           requests:
-            memory: 256Mi
-            cpu: "0.2"
+            memory: 512Mi
+            cpu: "0.5"
       volumes:
       - name: logs-volume
         persistentVolumeClaim:
