@@ -9,7 +9,7 @@ spec:
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 2     # Baseline capacity
-  maxReplicaCount: 12    # Match Producer capacity for load testing
+  maxReplicaCount: 6     # Match Producer capacity - 12 pods × 50 conn = 600 max
   triggers:
     - type: postgresql
       metadata:
