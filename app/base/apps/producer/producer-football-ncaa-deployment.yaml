@@ -21,7 +21,7 @@ spec:
       containers:
       - name: producer
         image: sportdeets.azurecr.io/sportsdataproducer:1343
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: ["dotnet"]
         args: ["SportsData.Producer.dll", "-mode", "FootballNcaa"]
         env:

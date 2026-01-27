@@ -20,7 +20,7 @@ spec:
       containers:
       - name: provider-football-ncaa
         image: sportdeets.azurecr.io/sportsdataprovider:1348
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: ["dotnet"]
         args: ["SportsData.Provider.dll", "-mode", "FootballNcaa"]
         env:
