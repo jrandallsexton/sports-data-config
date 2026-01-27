@@ -8,8 +8,8 @@ spec:
     name: producer-football-ncaa
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
-  minReplicaCount: 2     # Baseline capacity (current production state)
-  maxReplicaCount: 6     # Cap to protect PostgreSQL - 12 pods × 50 conn = 600 max
+  minReplicaCount: 6     # TEMP: Locked during load test to prevent oscillation
+  maxReplicaCount: 6     # TEMP: Locked during load test to prevent oscillation
   triggers:
     - type: postgresql
       metadata:
