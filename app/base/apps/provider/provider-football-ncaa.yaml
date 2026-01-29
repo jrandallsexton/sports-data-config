@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: provider-football-ncaa
   namespace: default
-  annotations:
+  # annotations:
     # TEMP: Disabled during load test to prevent cycling
     # configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
