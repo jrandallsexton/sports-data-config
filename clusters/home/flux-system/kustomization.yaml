@@ -16,3 +16,4 @@ resources:
 - csi-driver-smb-helmrepository.yaml
 - ../../../app/base/smb-csi-driver
 - keda-helmrepository.yaml
+- cert-manager-helmrepository.yaml
