@@ -1,0 +1,43 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: web-ui-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`sportdeets.com`) || Host(`www.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: web-ui-service
+          port: 80
+  tls:
+    secretName: apex-sportdeets-tls
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: web-ui-http
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`sportdeets.com`) || Host(`www.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: web-ui-service
+          port: 80
+      middlewares:
+        - name: https-redirect
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: https-redirect
+  namespace: default
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true

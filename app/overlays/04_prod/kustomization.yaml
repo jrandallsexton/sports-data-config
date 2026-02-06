@@ -13,6 +13,7 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
+- ../../base/apps/web-ui
 - ../../base/monitoring/prometheus
 - ../../base/monitoring/umami
 - ollama-config.yaml
@@ -20,6 +21,7 @@ patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
 - provider-patch.yaml
+- web-ui-patch.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge

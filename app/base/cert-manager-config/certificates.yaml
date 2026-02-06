@@ -1,0 +1,67 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-sportdeets
+  namespace: default
+spec:
+  secretName: api-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - api.sportdeets.com
+    - api-int.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: admin-sportdeets
+  namespace: default
+spec:
+  secretName: admin-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - admin.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: analytics-sportdeets
+  namespace: default
+spec:
+  secretName: analytics-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - analytics.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: logging-sportdeets
+  namespace: default
+spec:
+  secretName: logging-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - logging.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: apex-sportdeets
+  namespace: default
+spec:
+  secretName: apex-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - sportdeets.com
+    - www.sportdeets.com

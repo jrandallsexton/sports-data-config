@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-ui
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: web-ui
+        image: sportdeets.azurecr.io/sportsdataui:latest
