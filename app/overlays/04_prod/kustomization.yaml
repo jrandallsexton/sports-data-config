@@ -9,6 +9,7 @@ resources:
 - ../../base/logging
 - ../../base/ollama
 - ../../base/cert-manager
+- ../../base/cert-manager-config
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
