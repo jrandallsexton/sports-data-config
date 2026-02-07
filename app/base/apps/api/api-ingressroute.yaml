@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`api-int.sportdeets.com`) || Host(`67.7.88.82`) || Host(`api.sportdeets.com`)
+    - match: (Host(`api-int.sportdeets.com`) || Host(`67.7.88.82`) || Host(`api.sportdeets.com`)) && !PathPrefix(`/.well-known/acme-challenge/`)
       kind: Rule
       services:
         - name: api-service
