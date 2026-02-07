@@ -62,9 +62,8 @@ data:
         GF_SERVER_ROOT_URL: "https://admin.sportdeets.com/grafana"
         GF_SERVER_DOMAIN: "admin.sportdeets.com"
         GF_SERVER_SERVE_FROM_SUB_PATH: "true"
-        GF_SECURITY_ADMIN_PASSWORD: "admin"
-        GF_SECURITY_ADMIN_USER: "admin"
         GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      envFromSecret: grafana-admin-credentials
       sidecar:
         datasources:
           enabled: true
