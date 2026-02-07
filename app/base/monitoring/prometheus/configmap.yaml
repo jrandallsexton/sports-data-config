@@ -7,7 +7,10 @@ data:
   values.yaml: |
     grafana:
       enabled: true
-      adminPassword: "admin" # dev only; replace later
+      admin:
+        existingSecret: grafana-admin-credentials
+        userKey: admin-user
+        passwordKey: admin-password
       service:
         type: ClusterIP
       envFromSecret: ""
