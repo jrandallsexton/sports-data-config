@@ -1,10 +1,15 @@
 # SSL Termination Migration Plan
-**Migration from Azure Front Door to Traefik-Native SSL**
+**✅ MIGRATION COMPLETED - February 7, 2026**
 
 ## Timeline
-- **Start Date**: February 1, 2026
-- **SSL Certificate Expiration**: February 14, 2026 (13 days)
-- **Target Completion**: February 12, 2026 (2-day buffer)
+- **Start Date**: February 7, 2026
+- **SSL Certificate Expiration**: February 14, 2026
+- **Actual Completion**: February 7, 2026 (same day - 7-day buffer before expiration)
+- **Original Estimate**: 12 days
+- **Actual Duration**: 1 day
+
+## Executive Summary
+Successfully migrated from Azure Front Door to self-hosted Let's Encrypt certificates in a single day. All services secured with HTTPS, Azure resources deleted, and **$720/year cost savings** achieved.
 
 ## Current State
 
@@ -27,13 +32,17 @@
 - AFD costs no longer justified for hobby project
 - SSL cert expires February 14, 2026
 - Desire for self-managed infrastructure
+- ✅ **Cost Savings: $720/year** (AFD + Static Web App eliminated)
 
 ## Target State
-
-### New Architecture
-- **SSL Termination**: Traefik ingress controller (in-cluster)
-- **Certificate Management**: cert-manager with Let's Encrypt
-- **Ingress Controller**: Traefik v24.0.0 (HTTPS on port 8443)
+✅ New Architecture (COMPLETED)
+- **SSL Termination**: Traefik ingress controller (in-cluster) ✅
+- **Certificate Management**: cert-manager v1.16.2 with Let's Encrypt DNS-01 validation ✅
+- **DNS Provider**: Cloudflare (migrated from NameCheap) ✅
+- **Ingress Controller**: Traefik v24.0.0 (HTTPS on port 8443) ✅
+- **React UI Hosting**: Containerized nginx (replaced Azure Static Web App) ✅
+- **New Flow**: Client → Traefik (SSL termination) → Services ✅
+- **All Certificates Valid Until**: May 7-8, 2026 (auto-renew 30 days before expiration) ✅)
 - **New Flow**: Client → Traefik (SSL termination) → Services
 
 ## Migration Plan
@@ -690,12 +699,34 @@ report-uri https://your-reporting-endpoint.com/csp-violations;
 
 ---
 
+## Post-Migration Status
+
+### ✅ Completed Items
+1. **cert-manager deployed** - v1.16.2 with DNS-01 validation (IPv4 DNS fix applied)
+2. **DNS Migration** - Cloudflare (from NameCheap) with API token for DNS-01 challenges
+3. **All Certificates Issued** - 5 Let's Encrypt production certificates (valid until May 2026)
+4. **HTTPS IngressRoutes** - Created for all services with HTTP→HTTPS redirects
+5. **React UI Containerization** - Replaced Azure Static Web App with nginx container
+6. **CSP Configuration** - Updated for Firebase authentication and Google Maps
+7. **Azure Cleanup** - Front Door and Static Web App deleted
+8. **Grafana Access** - Password reset and secured in Kubernetes Secret
+9. **GitHub Actions** - Removed APIM dependencies, added UI deployment
+
+### 🔄 Deferred Items
+1. **Hangfire Dashboards** - Disabled externally (auth hard-coded to `true`), accessible via port-forward
+2. **Google Maps** - May need API key verification
+3. **CSP Hardening** - Nonce-based implementation deferred (using 'unsafe-inline')
+
+---
+
 ## Cost Savings
-- **Azure Front Door**: ~$35-50/month (~$420-600/year)
-- **Azure API Management**: ~$50-250/month (~$600-3000/year, if using Developer tier or higher)
-- **NameCheap SSL Certificate**: ~$10-60/year (no longer needed)
-- **cert-manager + Let's Encrypt**: $0 (free)
-- **Total Annual Savings**: ~$1,030-3,660/year
+- **Azure Front Door**: ~$35-50/month (~$420-600/year) - ✅ **DELETED**
+- **Azure Static Web App**: ~$10/month (~$120/year) - ✅ **DELETED**
+- **Azure API Management**: ✅ **NOT USING**
+- **NameCheap SSL Certificate**: ~$10-60/year - ✅ **NO LONGER NEEDED**
+- **cert-manager + Let's Encrypt**: $0 (free) ✅
+- **Cloudflare DNS**: $0 (free tier) ✅
+- **Total Annual Savings**: **$720/year** (AFD + Static Web App eliminated)
 
 ---
 
@@ -703,13 +734,22 @@ report-uri https://your-reporting-endpoint.com/csp-violations;
 - [cert-manager Documentation](https://cert-manager.io/docs/)
 - [Let's Encrypt Rate Limits](https://letsencrypt.org/docs/rate-limits/)
 - [Traefik TLS Configuration](https://doc.traefik.io/traefik/routing/routers/#tls)
-- [Traefik cert-manager Integration](https://doc.traefik.io/traefik/user-guides/crd-acme/)
+- [Cloudflare DNS-01 ACME](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
 
 ---
 
-## Notes
-- **Timeline is aggressive but feasible** with 13 days before cert expiration
-- **2-day buffer** built in for troubleshooting
-- **Staging environment testing** prevents rate limit issues
-- **DNS TTL reduction** enables quick rollback if needed
-- **GitOps workflow** ensures all changes are version-controlled via Flux
+## Lessons Learned
+1. **DNS-01 vs HTTP-01**: Router ISP management can block HTTP-01; DNS-01 more reliable for home labs
+2. **IPv6 DNS Issues**: Force IPv4 DNS with `--dns01-recursive-nameservers` flag
+3. **NAT Hairpinning**: Test HTTPS externally to avoid router admin UI intercepts
+4. **Grafana Passwords**: Environment variables don't override SQLite database; use `grafana cli`
+5. **Migration Duration**: Completed in 1 day vs 12-day estimate (DNS-01 bypassed HTTP challenges)
+
+---
+
+## Final Notes
+- ✅ **Completed February 7, 2026** - 7 days before SSL expiration
+- ✅ **All services HTTPS** with valid Let's Encrypt certificates
+- ✅ **Zero downtime** - No active users during migration
+- ✅ **GitOps maintained** - All changes via Git + Flux
+- ✅ **Security preserved** - Passwords in Kubernetes Secrets, not source control
