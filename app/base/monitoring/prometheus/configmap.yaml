@@ -9,11 +9,11 @@ data:
       enabled: true
       admin:
         existingSecret: grafana-admin-credentials
-        userKey: admin-user
-        passwordKey: admin-password
+        userKey: GF_SECURITY_ADMIN_USER
+        passwordKey: GF_SECURITY_ADMIN_PASSWORD
       service:
         type: ClusterIP
-      envFromSecret: ""
+      envFromSecret: grafana-admin-credentials
       persistence:
         enabled: true
         type: pvc
