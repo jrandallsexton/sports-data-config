@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - name: web-ui
-        image: sportdeets.azurecr.io/sportsdataui:latest
+        image: sportdeets.azurecr.io/sportsdataui:202602070615
