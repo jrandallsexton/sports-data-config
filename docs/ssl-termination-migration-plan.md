@@ -590,6 +590,106 @@ kubectl describe certificate <cert-name> -n <namespace>
 
 ---
 
+## Post-Migration Security Hardening
+
+### Content Security Policy Nonce Implementation
+**Priority**: Medium | **Complexity**: High | **Timeline**: Post-SSL migration
+
+**Current State**:
+- CSP uses `'unsafe-inline'` for `script-src` and `style-src`
+- API URLs hardcoded in CSP `connect-src` directive
+- Acceptable for initial deployment but weakens XSS protection
+
+**Security Issues**:
+1. **`'unsafe-inline'` in script-src**: Allows inline JavaScript, defeating CSP's primary XSS protection
+2. **`'unsafe-inline'` in style-src**: Required for Emotion/CSS-in-JS but could be tightened with nonces
+3. **Hardcoded API URLs**: `connect-src` contains build-time URLs instead of runtime env vars
+
+**Recommended Implementation** (after SSL migration stabilizes):
+
+#### 1. Nonce-Based CSP for Scripts
+**Goal**: Remove `'unsafe-inline'` from `script-src` by using cryptographic nonces
+
+**Requirements**:
+- Generate random nonce on each request (e.g., via nginx Lua or custom entrypoint)
+- Inject nonce into HTML via `<meta>` tag or template substitution
+- Update React's `public/index.html` to reference nonce
+- Modify CSP header to use `script-src 'self' 'nonce-{NONCE}'`
+
+**Implementation Options**:
+- **Option A**: nginx Lua module (requires recompiling nginx with Lua support)
+- **Option B**: Node.js middleware serving static build with nonce injection
+- **Option C**: Edge worker/CDN to inject nonces (Cloudflare Workers, etc.)
+
+#### 2. Template CSP connect-src at Runtime
+**Goal**: Replace hardcoded API URLs with environment variables
+
+**Current**:
+```nginx
+connect-src 'self' https://api.sportdeets.com https://api-int.sportdeets.com;
+```
+
+**Proposed**:
+```nginx
+connect-src 'self' ${REACT_APP_API_BASE_URL} ${REACT_APP_SIGNALR_URL};
+```
+
+**Implementation**:
+1. Update `security-headers.conf` to use template variables
+2. Create entrypoint script that runs `envsubst` on startup:
+   ```bash
+   #!/bin/sh
+   envsubst '$REACT_APP_API_BASE_URL $REACT_APP_SIGNALR_URL' < /etc/nginx/security-headers.conf.template > /etc/nginx/security-headers.conf
+   nginx -g "daemon off;"
+   ```
+3. Update Dockerfile to copy template and use custom entrypoint
+4. Pass env vars via Kubernetes Deployment
+
+#### 3. Style-src Hardening
+**Challenge**: `@emotion/react` and `@emotion/styled` require inline styles
+
+**Options**:
+- Keep `'unsafe-inline'` (acceptable for CSS-in-JS frameworks)
+- Implement nonce-based styles (complex, requires Emotion theme provider changes)
+- Migrate to CSS modules (major refactor, not recommended)
+
+**Recommendation**: Defer style-src hardening - inline styles in CSS-in-JS are low risk compared to scripts
+
+#### 4. Testing CSP Changes
+**Critical**: Test CSP changes thoroughly to avoid breaking UI
+
+**Testing Approach**:
+1. Use CSP in **report-only mode** first:
+   ```nginx
+   add_header Content-Security-Policy-Report-Only "..." always;
+   ```
+2. Monitor violations via browser console or reporting endpoint
+3. Iterate on policy until no violations
+4. Switch to enforcement mode
+
+**Reporting Endpoint** (optional):
+```nginx
+report-uri https://your-reporting-endpoint.com/csp-violations;
+```
+
+#### 5. Estimated Effort
+- **Nonce implementation**: 8-16 hours (nginx Lua) or 4-8 hours (Node.js middleware)
+- **Environment templating**: 2-4 hours
+- **Testing and iteration**: 4-8 hours
+- **Total**: 14-28 hours
+
+**Dependencies**:
+- SSL migration complete and stable
+- Production traffic flowing through Traefik
+- Monitoring/observability in place for CSP violation tracking
+
+**References**:
+- [CSP Nonce Best Practices](https://content-security-policy.com/nonce/)
+- [nginx Lua Module](https://github.com/openresty/lua-nginx-module)
+- [React CSP Configuration](https://create-react-app.dev/docs/advanced-configuration/#inline-runtime-chunk)
+
+---
+
 ## Cost Savings
 - **Azure Front Door**: ~$35-50/month (~$420-600/year)
 - **Azure API Management**: ~$50-250/month (~$600-3000/year, if using Developer tier or higher)
