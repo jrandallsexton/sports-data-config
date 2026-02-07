@@ -2,13 +2,31 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: grafana
+  name: grafana-http
   namespace: monitoring
 spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/grafana`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/grafana`))
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/grafana`)
+      kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
+      services:
+        - name: kube-prometheus-stack-grafana
+          port: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana-https
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/grafana`)
       kind: Rule
       middlewares:
         - name: grafana-cors
@@ -16,6 +34,8 @@ spec:
       services:
         - name: kube-prometheus-stack-grafana
           port: 80
+  tls:
+    secretName: admin-sportdeets-tls
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -82,19 +102,39 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: prometheus
+  name: prometheus-http
   namespace: monitoring
 spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/prometheus`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/prometheus`))
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/prometheus`)
+      kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
+      services:
+        - name: kube-prometheus-stack-kps-prometheus
+          port: 9090
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus-https
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/prometheus`)
       kind: Rule
       middlewares:
         - name: prometheus-stripprefix
       services:
         - name: kube-prometheus-stack-kps-prometheus
           port: 9090
+  tls:
+    secretName: admin-sportdeets-tls
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -109,19 +149,39 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: alertmanager
+  name: alertmanager-http
   namespace: monitoring
 spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/alertmanager`) || (Host(`admin.sportdeets.com`) && PathPrefix(`/alertmanager`))
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/alertmanager`)
+      kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
+      services:
+        - name: kube-prometheus-stack-kps-alertmanager
+          port: 9093
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: alertmanager-https
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`admin.sportdeets.com`) && PathPrefix(`/alertmanager`)
       kind: Rule
       middlewares:
         - name: alertmanager-stripprefix
       services:
         - name: kube-prometheus-stack-kps-alertmanager
           port: 9093
+  tls:
+    secretName: admin-sportdeets-tls
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
