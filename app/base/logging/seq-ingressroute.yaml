@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: seq-ingress
+  name: seq-ingress-http
   namespace: default
 spec:
   entryPoints:
@@ -9,7 +9,28 @@ spec:
   routes:
     - match: Host(`logging.sportdeets.com`)
       kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
       services:
         - name: seq
           namespace: default
           port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: seq-ingress-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`logging.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: seq
+          namespace: default
+          port: 80
+  tls:
+    secretName: logging-sportdeets-tls
