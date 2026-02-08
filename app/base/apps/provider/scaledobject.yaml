@@ -9,7 +9,7 @@ spec:
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 2     # TEMP: Locked during load test to prevent oscillation
-  maxReplicaCount: 7     # TEMP: Locked during load test to prevent oscillation
+  maxReplicaCount: 6     # TEMP: Locked during load test to prevent oscillation
   triggers:
     - type: postgresql
       metadata:
@@ -19,7 +19,7 @@ spec:
           FROM hangfire.jobqueue
           WHERE fetchedat IS NULL
             AND queue = 'default'
-        targetQueryValue: "10"                # Scale up if >10 jobs per pod
+        targetQueryValue: "30"                # Scale up if >30 jobs per pod
         activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
       authenticationRef:
         name: provider-hangfire-trigger-auth

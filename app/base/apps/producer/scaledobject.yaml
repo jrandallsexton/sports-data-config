@@ -19,7 +19,7 @@ spec:
           FROM hangfire.jobqueue
           WHERE fetchedat IS NULL
             AND queue = 'default'
-        targetQueryValue: "10"                # Scale up if >10 jobs per pod
+        targetQueryValue: "30"                # Scale up if >30 jobs per pod
         activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
       authenticationRef:
         name: producer-hangfire-trigger-auth
