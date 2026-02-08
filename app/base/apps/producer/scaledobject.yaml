@@ -9,7 +9,7 @@ spec:
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 0     # SCALED DOWN: ESPN rate limiting
-  maxReplicaCount: 6     # TEMP: Locked during load test to prevent oscillation
+  maxReplicaCount: 0     # TEMP: Locked during load test to prevent oscillation
   triggers:
     - type: postgresql
       metadata:
