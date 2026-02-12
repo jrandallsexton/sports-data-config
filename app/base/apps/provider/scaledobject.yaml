@@ -9,7 +9,7 @@ spec:
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 0     # Provider calls ESPN - limited to 1 replica for historical sourcing
-  maxReplicaCount: 1     # For live season tracking, increase to 4-6
+  maxReplicaCount: 2     # For live season tracking, increase to 4-6
   triggers:
     - type: postgresql
       metadata:
