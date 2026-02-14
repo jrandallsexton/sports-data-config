@@ -3,6 +3,8 @@ kind: ScaledObject
 metadata:
   name: producer-football-ncaa-scaler
   namespace: default
+  annotations:
+    autoscaling.keda.sh/paused: "true"  # SUSPENDED for database snapshot
 spec:
   scaleTargetRef:
     name: producer-football-ncaa
