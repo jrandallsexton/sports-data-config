@@ -7,7 +7,7 @@ metadata:
     # TEMP: Disabled during load test to prevent cycling
     # configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
-  replicas: 1  # SCALED TO ZERO for database snapshot
+  replicas: 0  # SCALED TO ZERO for database snapshot
   selector:
     matchLabels:
       app: provider-football-ncaa
