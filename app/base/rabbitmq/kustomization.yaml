@@ -6,3 +6,4 @@ resources:
   - namespace.yaml
   - rabbitmq-cluster.yaml
   - servicemonitor.yaml
+  - ingressroute.yaml

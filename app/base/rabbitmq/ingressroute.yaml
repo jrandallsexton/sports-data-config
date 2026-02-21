@@ -1,0 +1,35 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rabbitmq-http
+  namespace: messaging
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`messaging.sportdeets.com`)
+      kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
+      services:
+        - name: rabbitmq
+          port: 15672
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rabbitmq-https
+  namespace: messaging
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`messaging.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: rabbitmq
+          port: 15672
+  tls:
+    secretName: messaging-sportdeets-tls

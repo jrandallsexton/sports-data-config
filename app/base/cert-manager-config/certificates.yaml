@@ -55,6 +55,19 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: messaging-sportdeets
+  namespace: messaging
+spec:
+  secretName: messaging-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - messaging.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: apex-sportdeets
   namespace: default
 spec:
