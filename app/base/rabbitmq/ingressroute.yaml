@@ -33,3 +33,4 @@ spec:
           port: 15672
   tls:
     secretName: messaging-sportdeets-tls
+    secretNamespace: default
