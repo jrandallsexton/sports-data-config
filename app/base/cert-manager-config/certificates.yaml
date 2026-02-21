@@ -56,7 +56,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: messaging-sportdeets
-  namespace: messaging
+  namespace: default
 spec:
   secretName: messaging-sportdeets-tls
   issuerRef:
