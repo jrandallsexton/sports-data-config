@@ -7,3 +7,4 @@ resources:
   - configmap.yaml
   - ingressroutes.yaml
   - pushgateway.yaml
+  - dashboard-row-counts.yaml
