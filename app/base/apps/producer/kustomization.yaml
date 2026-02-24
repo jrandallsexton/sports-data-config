@@ -5,3 +5,4 @@ resources:
 - producer-football-ncaa-service.yaml
 - servicemonitor.yaml
 - scaledobject.yaml
+- row-count-cronjob.yaml

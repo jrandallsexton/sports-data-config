@@ -6,3 +6,4 @@ resources:
   - helmrelease.yaml
   - configmap.yaml
   - ingressroutes.yaml
+  - pushgateway.yaml

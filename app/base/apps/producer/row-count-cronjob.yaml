@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: row-count-script
+  namespace: default
+data:
+  run.sh: |
+    #!/bin/sh
+    set -e
+
+    echo "Starting row count collection..."
+
+    # Get the list of tables to count
+    TABLES_QUERY="
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE'
+        AND table_name NOT IN ('OutboxMessage', 'OutboxState', 'OutboxPings', 'InboxState');
+    "
+    
+    TABLES=$(psql -t -A -q -c "$TABLES_QUERY")
+
+    if [ -z "$TABLES" ]; then
+      echo "No tables found or query failed."
+      exit 1
+    fi
+
+    # Format metrics for Prometheus
+    METRICS=""
+    for TABLE in $TABLES; do
+      # Get the exact count for each table
+      COUNT=$(psql -t -A -q -c "SELECT COUNT(*) FROM public.\"$TABLE\";")
+      
+      if [ -n "$COUNT" ]; then
+        # Append to the metrics payload in Prometheus exposition format
+        # Using printf instead of echo -e for better POSIX compliance in Alpine
+        METRICS="${METRICS}sportsdata_table_row_count{table=\"${TABLE}\"} ${COUNT}\n"
+      fi
+    done
+
+    echo "Generated metrics:"
+    printf "%b" "$METRICS"
+
+    # Push to Pushgateway
+    if [ -n "$PUSHGATEWAY_URL" ]; then
+      echo "Pushing to $PUSHGATEWAY_URL..."
+      
+      if command -v curl >/dev/null 2>&1; then
+        printf "%b" "$METRICS" | curl --silent --show-error --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/postgres_row_counts"
+      else
+        # Fallback to wget if curl is not available
+        # Create a temporary file for the metrics payload
+        echo -e "$METRICS" > /tmp/metrics.txt
+        wget --post-file=/tmp/metrics.txt -qO- "${PUSHGATEWAY_URL}/metrics/job/postgres_row_counts"
+      fi
+      
+      echo "Push complete."
+    else
+      echo "PUSHGATEWAY_URL not set, skipping push."
+    fi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: producer-row-count-exporter
+  namespace: default
+spec:
+  schedule: "*/15 * * * *" # Every 15 minutes
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: producer-row-count-exporter
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: exporter
+            image: postgres:15-alpine
+            command: ["/bin/sh", "/scripts/run.sh"]
+            env:
+              # The Pushgateway URL (internal cluster DNS)
+              - name: PUSHGATEWAY_URL
+                value: "http://pushgateway.monitoring.svc.cluster.local:9091"
+              
+              # PostgreSQL connection details
+              # In a real environment, these should come from a Secret.
+              # For now, we map them to the expected environment variables for psql.
+              - name: PGHOST
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: host
+                    optional: true
+              - name: PGPORT
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: port
+                    optional: true
+              - name: PGDATABASE
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: database
+                    optional: true
+              - name: PGUSER
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: username
+                    optional: true
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: password
+                    optional: true
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+              readOnly: true
+          volumes:
+          - name: script-volume
+            configMap:
+              name: row-count-script
+              defaultMode: 0755
