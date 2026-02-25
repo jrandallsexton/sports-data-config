@@ -8,3 +8,4 @@ resources:
   - ingressroutes.yaml
   - pushgateway.yaml
   - dashboard-row-counts.yaml
+  - dashboard-historical-sourcing-sagas.yaml
