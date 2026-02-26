@@ -4,7 +4,7 @@ metadata:
   name: provider-football-ncaa-scaler
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "false"  # SUSPENDED for database snapshot
+    autoscaling.keda.sh/paused: "true"  # SUSPENDED for database snapshot
 spec:
   scaleTargetRef:
     name: provider-football-ncaa
