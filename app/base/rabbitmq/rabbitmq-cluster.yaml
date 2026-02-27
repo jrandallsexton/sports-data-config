@@ -19,6 +19,11 @@ spec:
       cluster_formation.k8s.address_type = hostname
       vm_memory_high_watermark.relative = 0.8
       prometheus.return_per_object_metrics = true
+
+  persistence:
+    storageClassName: local-path
+    storage: 10Gi
+
   resources:
     requests:
       cpu: 500m
