@@ -18,60 +18,82 @@ data:
       "liveNow": false,
       "panels": [
         {
-          "title": "Messages in Queue: $queue",
+          "title": "Queue: $queue",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "repeat": "queue",
+          "repeatDirection": "h",
+          "maxPerRow": 3,
           "targets": [
             {
               "expr": "rabbitmq_queue_messages{queue=~\"$queue\"}",
-              "legendFormat": "{{queue}} - Total",
+              "legendFormat": "Total",
               "refId": "A"
             },
             {
               "expr": "rabbitmq_queue_messages_ready{queue=~\"$queue\"}",
-              "legendFormat": "{{queue}} - Ready",
+              "legendFormat": "Ready",
               "refId": "B"
             },
             {
               "expr": "rabbitmq_queue_messages_unacked{queue=~\"$queue\"}",
-              "legendFormat": "{{queue}} - Unacked",
+              "legendFormat": "Unacked",
               "refId": "C"
-            }
-          ],
-          "gridPos": {
-            "h": 8,
-            "w": 24,
-            "x": 0,
-            "y": 0
-          }
-        },
-        {
-          "title": "Publish / Deliver Rate: $queue",
-          "type": "timeseries",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "targets": [
+            },
             {
               "expr": "rate(rabbitmq_queue_messages_published_total{queue=~\"$queue\"}[1m])",
-              "legendFormat": "{{queue}} - Published/s",
-              "refId": "A"
+              "legendFormat": "Pub/s",
+              "refId": "D"
             },
             {
               "expr": "rate(rabbitmq_queue_messages_delivered_total{queue=~\"$queue\"}[1m])",
-              "legendFormat": "{{queue}} - Delivered/s",
-              "refId": "B"
+              "legendFormat": "Del/s",
+              "refId": "E"
             }
           ],
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "lineWidth": 1
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*/s"
+                },
+                "properties": [
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "custom.drawStyle",
+                    "value": "bars"
+                  },
+                  {
+                    "id": "custom.fillOpacity",
+                    "value": 30
+                  }
+                ]
+              }
+            ]
+          },
           "gridPos": {
             "h": 8,
-            "w": 24,
+            "w": 8,
             "x": 0,
-            "y": 8
+            "y": 0
           }
         }
       ],
@@ -85,8 +107,12 @@ data:
             "allValue": ".*",
             "current": {
               "selected": true,
-              "text": "All",
-              "value": "$__all"
+              "text": [
+                "All"
+              ],
+              "value": [
+                "$__all"
+              ]
             },
             "datasource": {
               "type": "prometheus",
@@ -119,5 +145,5 @@ data:
       "timezone": "browser",
       "title": "RabbitMQ Queues",
       "uid": "rabbitmq-queues-custom",
-      "version": 1
+      "version": 2
     }
