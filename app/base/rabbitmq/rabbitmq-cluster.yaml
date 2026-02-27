@@ -18,11 +18,7 @@ spec:
       cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
       cluster_formation.k8s.address_type = hostname
       vm_memory_high_watermark.relative = 0.8
-  
-  persistence:
-    storageClassName: local-path
-    storage: 50Gi
-  
+      prometheus.return_per_object_metrics = true
   resources:
     requests:
       cpu: 500m
