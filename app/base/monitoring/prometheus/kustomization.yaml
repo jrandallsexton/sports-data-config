@@ -8,4 +8,5 @@ resources:
   - ingressroutes.yaml
   - pushgateway.yaml
   - dashboard-row-counts.yaml
+  - dashboard-rabbitmq.yaml
   - dashboard-historical-sourcing-sagas.yaml
