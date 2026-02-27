@@ -9,4 +9,5 @@ resources:
   - pushgateway.yaml
   - dashboard-row-counts.yaml
   - dashboard-rabbitmq.yaml
+  - dashboard-rabbitmq-queues.yaml
   - dashboard-historical-sourcing-sagas.yaml

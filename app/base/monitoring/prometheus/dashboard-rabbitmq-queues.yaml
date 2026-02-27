@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-rabbitmq-queues
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  rabbitmq-queues.json: |-
+    {
+      "annotations": {
+        "list": []
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "title": "Messages in Queue: $queue",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "rabbitmq_queue_messages{queue=~\"$queue\"}",
+              "legendFormat": "{{queue}} - Total",
+              "refId": "A"
+            },
+            {
+              "expr": "rabbitmq_queue_messages_ready{queue=~\"$queue\"}",
+              "legendFormat": "{{queue}} - Ready",
+              "refId": "B"
+            },
+            {
+              "expr": "rabbitmq_queue_messages_unacked{queue=~\"$queue\"}",
+              "legendFormat": "{{queue}} - Unacked",
+              "refId": "C"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "title": "Publish / Deliver Rate: $queue",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "expr": "rate(rabbitmq_queue_messages_published_total{queue=~\"$queue\"}[1m])",
+              "legendFormat": "{{queue}} - Published/s",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(rabbitmq_queue_messages_delivered_total{queue=~\"$queue\"}[1m])",
+              "legendFormat": "{{queue}} - Delivered/s",
+              "refId": "B"
+            }
+          ],
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 8
+          }
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["rabbitmq"],
+      "templating": {
+        "list": [
+          {
+            "allValue": ".*",
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "definition": "label_values(rabbitmq_queue_messages, queue)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Queue",
+            "multi": true,
+            "name": "queue",
+            "options": [],
+            "query": {
+              "query": "label_values(rabbitmq_queue_messages, queue)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "RabbitMQ Queues",
+      "uid": "rabbitmq-queues-custom",
+      "version": 1
+    }
