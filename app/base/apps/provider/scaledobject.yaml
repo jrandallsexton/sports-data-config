@@ -4,13 +4,13 @@ metadata:
   name: provider-football-ncaa-scaler
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "false"  # SUSPENDED for database snapshot
+    autoscaling.keda.sh/paused: "true"  # SUSPENDED for database snapshot
 spec:
   scaleTargetRef:
     name: provider-football-ncaa
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
-  minReplicaCount: 1     # Provider calls ESPN - limited to 1 replica for historical sourcing
+  minReplicaCount: 0     # Provider calls ESPN - limited to 1 replica for historical sourcing
   maxReplicaCount: 2     # For live season tracking, increase to 4-6
   triggers:
     - type: postgresql
