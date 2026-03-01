@@ -49,9 +49,6 @@ spec:
               name: app-config
         ports:
         - containerPort: 8080
-        volumeMounts:
-        - name: logs-volume
-          mountPath: /app/logs
         resources:
           limits:
             memory: 1Gi
@@ -59,7 +56,4 @@ spec:
           requests:
             memory: 512Mi
             cpu: "0.5"
-      volumes:
-      - name: logs-volume
-        persistentVolumeClaim:
-          claimName: logs-pvc
+
