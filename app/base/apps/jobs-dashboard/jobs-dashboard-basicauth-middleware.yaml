@@ -1,0 +1,22 @@
+# BasicAuth middleware for the Hangfire jobs dashboard.
+#
+# The referenced secret must be created manually (NOT committed to git):
+#
+#   htpasswd -nb admin <yourpassword> | kubectl create secret generic \
+#     jobs-dashboard-auth-secret \
+#     --from-file=users=/dev/stdin \
+#     -n default
+#
+# Or on Windows (PowerShell):
+#   $hash = & htpasswd -nb admin <yourpassword>
+#   kubectl create secret generic jobs-dashboard-auth-secret `
+#     --from-literal=users="$hash" -n default
+#
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: jobs-dashboard-auth
+  namespace: default
+spec:
+  basicAuth:
+    secret: jobs-dashboard-auth-secret

@@ -13,6 +13,7 @@ resources:
 - ../../base/apps/api
 - ../../base/apps/producer
 - ../../base/apps/provider
+- ../../base/apps/jobs-dashboard
 - ../../base/apps/web-ui
 - ../../base/monitoring/prometheus
 - ../../base/monitoring/umami
@@ -22,6 +23,7 @@ patchesStrategicMerge:
 - producer-patch.yaml
 - provider-patch.yaml
 - web-ui-patch.yaml
+- jobs-dashboard-patch.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge

@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobs-dashboard
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: jobs-dashboard
+        image: sportdeets.azurecr.io/sportsdatajobsdashboard:latest

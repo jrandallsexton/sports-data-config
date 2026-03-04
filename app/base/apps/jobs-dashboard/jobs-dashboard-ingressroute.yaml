@@ -1,0 +1,35 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jobs-dashboard-http
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`jobs.sportdeets.com`) && !PathPrefix(`/.well-known/acme-challenge/`)
+      kind: Rule
+      middlewares:
+        - name: jobs-dashboard-auth
+      services:
+        - name: jobs-dashboard-svc
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jobs-dashboard-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`jobs.sportdeets.com`)
+      kind: Rule
+      middlewares:
+        - name: jobs-dashboard-auth
+      services:
+        - name: jobs-dashboard-svc
+          port: 80
+  tls:
+    secretName: jobs-sportdeets-tls
