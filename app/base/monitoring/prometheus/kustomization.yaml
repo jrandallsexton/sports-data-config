@@ -13,3 +13,19 @@ resources:
   - dashboard-historical-sourcing-sagas.yaml
   - dashboard-hangfire.yaml
   - hangfire-exporter-cronjob.yaml
+
+patches:
+- patch: |-
+    - op: replace
+      path: /metadata/namespace
+      value: default
+  target:
+    kind: CronJob
+    name: hangfire-metrics-exporter
+- patch: |-
+    - op: replace
+      path: /metadata/namespace
+      value: default
+  target:
+    kind: ConfigMap
+    name: hangfire-metrics-script
