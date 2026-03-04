@@ -43,7 +43,8 @@ data:
 
     if [ -n "$PUSHGATEWAY_URL" ]; then
       echo "Pushing to $PUSHGATEWAY_URL..."
-      printf "%b" "$METRICS" | curl --silent --show-error --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
+      printf "%b" "$METRICS" > /tmp/metrics.txt
+      wget --post-file=/tmp/metrics.txt -qO- "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
       echo "Push complete."
     else
       echo "PUSHGATEWAY_URL not set, skipping push."
