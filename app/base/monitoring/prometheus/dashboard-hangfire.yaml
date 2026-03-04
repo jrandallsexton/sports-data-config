@@ -83,7 +83,36 @@ data:
                 "lineWidth": 2
               }
             },
-            "overrides": []
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Succeeded" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#37872D" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Failed" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#C4162A" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Enqueued" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#FA6400" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Processing" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#1F60C4" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Scheduled" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#8F3BB8" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Deleted" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#64645F" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Awaiting" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#B877D9" } }]
+              }
+            ]
           },
           "gridPos": {
             "h": 8,
