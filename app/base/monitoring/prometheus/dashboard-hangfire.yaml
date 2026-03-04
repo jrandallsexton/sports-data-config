@@ -19,7 +19,7 @@ data:
       "panels": [
         {
           "title": "$app - Queue Sizes",
-          "type": "barchart",
+          "type": "timeseries",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
