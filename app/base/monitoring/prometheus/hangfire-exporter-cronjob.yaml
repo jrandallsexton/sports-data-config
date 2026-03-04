@@ -23,8 +23,6 @@ data:
       APP_NAME=$(echo "$DB" | cut -d'.' -f1 | sed 's/^sd//')
       echo "Processing $DB (app=$APP_NAME)..."
 
-      # Always emit a zero baseline so app label is always present even when queue is empty
-      METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",queue=\"default\"} 0\n"
       QUEUES=$(psql -d "$DB" -t -A -q -c "SELECT queue, COUNT(*) FROM hangfire.jobqueue GROUP BY queue;" 2>/dev/null || true)
       for ROW in $QUEUES; do
         Q_NAME=$(echo "$ROW" | cut -d'|' -f1)

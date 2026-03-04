@@ -113,7 +113,7 @@ data:
               "type": "prometheus",
               "uid": "prometheus"
             },
-            "definition": "label_values(hangfire_queue_size, app)",
+            "definition": "label_values(hangfire_job_state_count, app)",
             "hide": 0,
             "includeAll": true,
             "label": "Application",
@@ -121,7 +121,7 @@ data:
             "name": "app",
             "options": [],
             "query": {
-              "query": "label_values(hangfire_queue_size, app)",
+              "query": "label_values(hangfire_job_state_count, app)",
               "refId": "StandardVariableQuery"
             },
             "refresh": 1,
