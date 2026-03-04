@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hangfire-metrics-script
+  namespace: default
+data:
+  run.sh: |
+    #!/bin/sh
+    set -e
+
+    echo "Starting Hangfire metric collection..."
+
+    DATABASES=$(psql -t -A -q -c "SELECT datname FROM pg_database WHERE datname ILIKE '%Hangfire';")
+
+    if [ -z "$DATABASES" ]; then
+      echo "No Hangfire databases found."
+      exit 0
+    fi
+
+    METRICS=""
+
+    for DB in $DATABASES; do
+      APP_NAME=$(echo "$DB" | cut -d'.' -f1 | sed 's/^sd//')
+      echo "Processing $DB (app=$APP_NAME)..."
+
+      QUEUES=$(psql -d "$DB" -t -A -q -c "SELECT queue, COUNT(*) FROM hangfire.jobqueue GROUP BY queue;" 2>/dev/null || true)
+      for ROW in $QUEUES; do
+        Q_NAME=$(echo "$ROW" | cut -d'|' -f1)
+        Q_COUNT=$(echo "$ROW" | cut -d'|' -f2)
+        METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",queue=\"${Q_NAME}\"} ${Q_COUNT}\n"
+      done
+
+      STATES=$(psql -d "$DB" -t -A -q -c "SELECT statename, COUNT(*) FROM hangfire.job GROUP BY statename;" 2>/dev/null || true)
+      for ROW in $STATES; do
+        S_NAME=$(echo "$ROW" | cut -d'|' -f1)
+        S_COUNT=$(echo "$ROW" | cut -d'|' -f2)
+        METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",state=\"${S_NAME}\"} ${S_COUNT}\n"
+      done
+    done
+
+    echo "Generated metrics:"
+    printf "%b" "$METRICS"
+
+    if [ -n "$PUSHGATEWAY_URL" ]; then
+      echo "Pushing to $PUSHGATEWAY_URL..."
+      printf "%b" "$METRICS" | curl --silent --show-error --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
+      echo "Push complete."
+    else
+      echo "PUSHGATEWAY_URL not set, skipping push."
+    fi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hangfire-metrics-exporter
+  namespace: default
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: hangfire-metrics-exporter
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: exporter
+            image: postgres:15-alpine
+            command: ["/bin/sh", "/scripts/run.sh"]
+            env:
+            - name: PUSHGATEWAY_URL
+              value: "http://pushgateway.monitoring.svc.cluster.local:9091"
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: host
+                  optional: true
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: port
+                  optional: true
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: database
+                  optional: true
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: username
+                  optional: true
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+                  optional: true
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+              readOnly: true
+          volumes:
+          - name: script-volume
+            configMap:
+              name: hangfire-metrics-script
+              defaultMode: 0755

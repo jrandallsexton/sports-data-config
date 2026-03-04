@@ -11,3 +11,5 @@ resources:
   - dashboard-rabbitmq.yaml
   - dashboard-rabbitmq-queues.yaml
   - dashboard-historical-sourcing-sagas.yaml
+  - dashboard-hangfire.yaml
+  - hangfire-exporter-cronjob.yaml
