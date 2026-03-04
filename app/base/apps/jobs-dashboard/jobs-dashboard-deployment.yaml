@@ -24,6 +24,8 @@ spec:
         command: ["dotnet"]
         args: ["SportsData.JobsDashboard.dll"]
         env:
+          - name: APPCONFIG_LABEL
+            value: "Prod"
           - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
