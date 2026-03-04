@@ -73,6 +73,16 @@ data:
           defaultFolderName: "General"
           label: grafana_dashboard
           labelValue: "1"
+      readinessProbe:
+        httpGet:
+          path: /api/health
+          port: 3000
+        initialDelaySeconds: 0
+        timeoutSeconds: 10      # was 1s — tolerate PG load from COUNT(*) scans
+        periodSeconds: 15       # was 10s — reduces probe frequency during load
+        successThreshold: 1
+        failureThreshold: 6     # was 3 — requires 90s of failure before NotReady
+
       additionalDataSources:
         - name: Loki
           type: loki
