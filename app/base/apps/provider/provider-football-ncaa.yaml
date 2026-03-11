@@ -16,6 +16,7 @@ spec:
       labels:
         app: provider-football-ncaa
     spec:
+      terminationGracePeriodSeconds: 120
       imagePullSecrets:
       - name: acr-secret
       containers:
@@ -50,6 +51,22 @@ spec:
               name: app-config
         ports:
         - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
         resources:
           limits:
             memory: 2Gi
