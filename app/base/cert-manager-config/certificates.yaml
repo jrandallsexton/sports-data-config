@@ -91,3 +91,16 @@ spec:
   dnsNames:
     - sportdeets.com
     - www.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: producer-sportdeets
+  namespace: default
+spec:
+  secretName: producer-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - producer.football-ncaa.sportdeets.com
