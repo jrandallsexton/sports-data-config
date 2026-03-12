@@ -4,6 +4,7 @@ resources:
 - ../../base/namespaces
 - ../../base/configmaps
 - ../../base/serviceaccounts
+- ../../base/caching
 - ../../base/rabbitmq
 - ../../base/keda
 - ../../base/logging

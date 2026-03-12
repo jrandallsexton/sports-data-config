@@ -15,17 +15,29 @@ spec:
     spec:
       containers:
       - name: redis
-        image: redis/redis-stack:latest
-        imagePullPolicy: Always
-        env:
-          - name: ASPNETCORE_ENVIRONMENT
-            value: "Local"
+        image: redis:7-alpine
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 6379
           name: redis-server
-        - containerPort: 8001
-          name: redis-ui
+        livenessProbe:
+          exec:
+            command: ["redis-cli", "ping"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command: ["redis-cli", "ping"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         resources:
           limits:
-            memory: 512Mi
-            cpu: "1"
+            memory: 128Mi
+            cpu: "250m"
+          requests:
+            memory: 64Mi
+            cpu: "100m"
