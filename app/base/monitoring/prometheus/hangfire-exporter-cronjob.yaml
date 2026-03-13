@@ -37,12 +37,17 @@ data:
         METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",state=\"${S_NAME}\"} ${S_COUNT}\n"
       done
 
+      SUCCEEDED_COUNT=0
+      FAILED_COUNT=0
       THROUGHPUT=$(psql -d "$DB" -t -A -q -c "SELECT name, COUNT(*) FROM hangfire.state WHERE createdat >= NOW() - INTERVAL '5 minutes' AND name IN ('Succeeded','Failed') GROUP BY name;" 2>/dev/null || true)
       for ROW in $THROUGHPUT; do
         T_STATE=$(echo "$ROW" | cut -d'|' -f1)
         T_COUNT=$(echo "$ROW" | cut -d'|' -f2)
-        METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",state=\"${T_STATE}\"} ${T_COUNT}\n"
+        if [ "$T_STATE" = "Succeeded" ]; then SUCCEEDED_COUNT=$T_COUNT; fi
+        if [ "$T_STATE" = "Failed" ]; then FAILED_COUNT=$T_COUNT; fi
       done
+      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",state=\"Succeeded\"} ${SUCCEEDED_COUNT}\n"
+      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",state=\"Failed\"} ${FAILED_COUNT}\n"
     done
 
     echo "Generated metrics:"
