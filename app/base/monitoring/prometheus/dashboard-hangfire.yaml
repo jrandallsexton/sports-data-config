@@ -154,8 +154,7 @@ data:
                 "fillOpacity": 20,
                 "lineWidth": 2
               },
-              "unit": "short",
-              "decimals": 0
+              "unit": "short"
             },
             "overrides": [
               {
