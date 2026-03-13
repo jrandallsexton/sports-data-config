@@ -37,7 +37,7 @@ data:
         METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",state=\"${S_NAME}\"} ${S_COUNT}\n"
       done
 
-      THROUGHPUT=$(psql -d "$DB" -t -A -q -c "SELECT statename, COUNT(*) FROM hangfire.job WHERE updatedat >= NOW() - INTERVAL '5 minutes' AND statename IN ('Succeeded','Failed') GROUP BY statename;" 2>/dev/null || true)
+      THROUGHPUT=$(psql -d "$DB" -t -A -q -c "SELECT name, COUNT(*) FROM hangfire.state WHERE createdat >= NOW() - INTERVAL '5 minutes' AND name IN ('Succeeded','Failed') GROUP BY name;" 2>/dev/null || true)
       for ROW in $THROUGHPUT; do
         T_STATE=$(echo "$ROW" | cut -d'|' -f1)
         T_COUNT=$(echo "$ROW" | cut -d'|' -f2)
