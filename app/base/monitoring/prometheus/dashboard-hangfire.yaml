@@ -120,6 +120,60 @@ data:
             "x": 0,
             "y": 8
           }
+        },
+        {
+          "title": "$app - Throughput (jobs/min)",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "repeat": "app",
+          "repeatDirection": "h",
+          "maxPerRow": 3,
+          "targets": [
+            {
+              "expr": "rate(hangfire_job_state_count{app=\"$app\", state=\"Succeeded\"}[10m]) * 60",
+              "legendFormat": "Succeeded",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(hangfire_job_state_count{app=\"$app\", state=\"Failed\"}[10m]) * 60",
+              "legendFormat": "Failed",
+              "refId": "B"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "lineWidth": 2
+              },
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Succeeded" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#37872D" } }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Failed" },
+                "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#C4162A" } }]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 16
+          }
         }
       ],
       "refresh": "10s",
