@@ -133,12 +133,12 @@ data:
           "maxPerRow": 3,
           "targets": [
             {
-              "expr": "rate(hangfire_job_state_count{app=\"$app\", state=\"Succeeded\"}[10m]) * 60",
+              "expr": "hangfire_jobs_completed_5m{app=\"$app\", state=\"Succeeded\"} / 5",
               "legendFormat": "Succeeded",
               "refId": "A"
             },
             {
-              "expr": "rate(hangfire_job_state_count{app=\"$app\", state=\"Failed\"}[10m]) * 60",
+              "expr": "hangfire_jobs_completed_5m{app=\"$app\", state=\"Failed\"} / 5",
               "legendFormat": "Failed",
               "refId": "B"
             }
