@@ -6,3 +6,4 @@ resources:
 - provider-doc-db.yaml
 - servicemonitor.yaml
 - scaledobject.yaml
+- provider-ingressroute.yaml

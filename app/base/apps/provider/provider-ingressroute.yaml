@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: provider-football-ncaa-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`provider.football-ncaa.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: provider-svc-football-ncaa
+          port: 80
+  tls:
+    secretName: provider-sportdeets-tls
