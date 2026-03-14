@@ -8,6 +8,8 @@ data:
     #!/bin/sh
     set -e
 
+    apk add --no-cache -q curl
+
     echo "Starting Hangfire metric collection..."
 
     DATABASES=$(psql -t -A -q -c "SELECT datname FROM pg_database WHERE datname ILIKE '%Hangfire';")
@@ -23,7 +25,6 @@ data:
       APP_NAME=$(echo "$DB" | cut -d'.' -f1 | sed 's/^sd//')
       echo "Processing $DB (app=$APP_NAME)..."
 
-      METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",queue=\"default\"} 0\n"
       QUEUES=$(psql -d "$DB" -t -A -q -c "SELECT queue, COUNT(*) FROM hangfire.jobqueue GROUP BY queue;" 2>/dev/null || true)
       for ROW in $QUEUES; do
         Q_NAME=$(echo "$ROW" | cut -d'|' -f1)
@@ -31,9 +32,6 @@ data:
         METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",queue=\"${Q_NAME}\"} ${Q_COUNT}\n"
       done
 
-      for STATE in Succeeded Failed Enqueued Processing Scheduled Deleted Awaiting; do
-        METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",state=\"${STATE}\"} 0\n"
-      done
       STATES=$(psql -d "$DB" -t -A -q -c "SELECT statename, COUNT(*) FROM hangfire.job GROUP BY statename;" 2>/dev/null || true)
       for ROW in $STATES; do
         S_NAME=$(echo "$ROW" | cut -d'|' -f1)
@@ -58,9 +56,9 @@ data:
     printf "%b" "$METRICS"
 
     if [ -n "$PUSHGATEWAY_URL" ]; then
-      echo "Pushing to $PUSHGATEWAY_URL..."
+      echo "Pushing to $PUSHGATEWAY_URL (PUT - full replace)..."
       printf "%b" "$METRICS" > /tmp/metrics.txt
-      wget --post-file=/tmp/metrics.txt -qO- "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
+      curl -s -X PUT --data-binary @/tmp/metrics.txt "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
       echo "Push complete."
     else
       echo "PUSHGATEWAY_URL not set, skipping push."
