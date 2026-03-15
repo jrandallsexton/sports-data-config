@@ -86,7 +86,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Cache Hits"
+                  "options": "MongoDB Cache Hits"
                 },
                 "properties": [
                   {
@@ -101,22 +101,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Cache Misses"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "yellow",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Live Fetches"
+                  "options": "ESPN Live Fetches"
                 },
                 "properties": [
                   {
@@ -157,7 +142,7 @@ data:
               },
               "editorMode": "code",
               "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__rate_interval]))",
-              "legendFormat": "Cache Hits",
+              "legendFormat": "MongoDB Cache Hits",
               "range": true,
               "refId": "A"
             },
@@ -167,24 +152,13 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(espn_cache_miss_total{job=~\"$job\"}[$__rate_interval]))",
-              "legendFormat": "Cache Misses",
+              "expr": "sum(increase(espn_live_fetch_total{job=~\"$job\"}[$__rate_interval]))",
+              "legendFormat": "ESPN Live Fetches",
               "range": true,
               "refId": "B"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${datasource}"
-              },
-              "editorMode": "code",
-              "expr": "sum(increase(espn_live_fetch_total{job=~\"$job\"}[$__rate_interval]))",
-              "legendFormat": "Live Fetches",
-              "range": true,
-              "refId": "C"
             }
           ],
-          "title": "ESPN Cache Hits vs Live Fetches",
+          "title": "MongoDB Cache Hits vs ESPN Live Fetches",
           "type": "timeseries"
         },
         {
@@ -245,7 +219,7 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) / (sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) + sum(increase(espn_cache_miss_total{job=~\"$job\"}[5m]))) * 100",
+              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) / (sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) + sum(increase(espn_live_fetch_total{job=~\"$job\"}[5m]))) * 100",
               "legendFormat": "Cache Hit Rate",
               "range": true,
               "refId": "A"
@@ -304,12 +278,12 @@ data:
               },
               "editorMode": "code",
               "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__range]))",
-              "legendFormat": "Total Cache Hits",
+              "legendFormat": "Total MongoDB Cache Hits",
               "instant": true,
               "refId": "A"
             }
           ],
-          "title": "Total Cache Hits (period)",
+          "title": "Total MongoDB Cache Hits (period)",
           "type": "stat"
         },
         {
@@ -362,12 +336,12 @@ data:
               },
               "editorMode": "code",
               "expr": "sum(increase(espn_live_fetch_total{job=~\"$job\"}[$__range]))",
-              "legendFormat": "Total Live Fetches",
+              "legendFormat": "Total ESPN Live Fetches",
               "instant": true,
               "refId": "A"
             }
           ],
-          "title": "Total Live Fetches (period)",
+          "title": "Total ESPN Live Fetches (period)",
           "type": "stat"
         }
       ],
