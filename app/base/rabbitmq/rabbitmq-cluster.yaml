@@ -13,6 +13,8 @@ spec:
       - rabbitmq_management
       - rabbitmq_prometheus
       - rabbitmq_federation
+      - rabbitmq_shovel
+      - rabbitmq_shovel_management
     additionalConfig: |
       cluster_formation.peer_discovery_backend = rabbit_peer_discovery_k8s
       cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
