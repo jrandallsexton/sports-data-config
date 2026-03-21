@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: provider-football-ncaa
+      app: provider-football-ncaa-api
   endpoints:
     - port: http
       path: /metrics

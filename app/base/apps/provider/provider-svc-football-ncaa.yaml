@@ -4,10 +4,10 @@ metadata:
   name: provider-svc-football-ncaa
   namespace: default
   labels:
-    app: provider-football-ncaa
+    app: provider-football-ncaa-api
 spec:
   selector:
-    app: provider-football-ncaa
+    app: provider-football-ncaa-api
   ports:
   - name: http
     protocol: TCP

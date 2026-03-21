@@ -23,6 +23,8 @@ patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
 - provider-patch.yaml
+- provider-ingest-patch.yaml
+- provider-api-patch.yaml
 - web-ui-patch.yaml
 - jobs-dashboard-patch.yaml
 configMapGenerator:
