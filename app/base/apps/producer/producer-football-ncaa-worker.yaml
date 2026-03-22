@@ -1,40 +1,36 @@
+# Producer Worker — processes Hangfire jobs (document processing, enrichment)
+# Replicas managed by KEDA ScaledObject — do not set here
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: producer-football-ncaa
+  name: producer-football-ncaa-worker
   namespace: default
-  annotations:
-    # TEMP: Disabled during load test to prevent cycling
-    # configmap.reloader.stakater.com/reload: "reload-trigger"
 spec:
-  # replicas managed by KEDA ScaledObject — do not set here  
-  # replicas: 0
+  # replicas managed by KEDA ScaledObject — do not set here
   selector:
     matchLabels:
-      app: producer-football-ncaa
+      app: producer-football-ncaa-worker
   template:
     metadata:
       labels:
-        app: producer-football-ncaa
-        sport: football-ncaa
+        app: producer-football-ncaa-worker
+        producer-role: worker
     spec:
       terminationGracePeriodSeconds: 120
       imagePullSecrets:
       - name: acr-secret
       containers:
-      - name: producer
+      - name: producer-football-ncaa-worker
         image: sportdeets.azurecr.io/sportsdataproducer:1343
         imagePullPolicy: IfNotPresent
         command: ["dotnet"]
-        args: ["SportsData.Producer.dll", "-mode", "FootballNcaa"]
+        args: ["SportsData.Producer.dll", "-mode", "FootballNcaa", "-role", "Worker"]
         env:
           - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
                 name: azure-app-config
                 key: connectionstring
-          - name: APPCONFIG_LABEL
-            value: "Prod"
           - name: AZURE_TENANT_ID
             valueFrom:
               secretKeyRef:
@@ -78,4 +74,3 @@ spec:
           requests:
             memory: 1Gi
             cpu: "1"
-

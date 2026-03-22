@@ -1,7 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- provider-football-ncaa.yaml
+- provider-football-ncaa-worker.yaml
+- provider-football-ncaa-ingest.yaml
+- provider-football-ncaa-api.yaml
 - provider-svc-football-ncaa.yaml
 - provider-doc-db.yaml
 - servicemonitor.yaml

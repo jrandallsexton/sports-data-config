@@ -1,0 +1,76 @@
+# Provider Worker — processes Hangfire jobs (ESPN fetches, document processing)
+# Replicas managed by KEDA ScaledObject — do not set here
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-football-ncaa-worker
+  namespace: default
+spec:
+  # replicas managed by KEDA ScaledObject — do not set here
+  selector:
+    matchLabels:
+      app: provider-football-ncaa-worker
+  template:
+    metadata:
+      labels:
+        app: provider-football-ncaa-worker
+        provider-role: worker
+    spec:
+      terminationGracePeriodSeconds: 120
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: provider-football-ncaa-worker
+        image: sportdeets.azurecr.io/sportsdataprovider:1348
+        imagePullPolicy: IfNotPresent
+        command: ["dotnet"]
+        args: ["SportsData.Provider.dll", "-mode", "FootballNcaa", "-role", "Worker"]
+        env:
+          - name: APPCONFIG_CONNSTR
+            valueFrom:
+              secretKeyRef:
+                name: azure-app-config
+                key: connectionstring
+          - name: AZURE_TENANT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_TENANT_ID
+          - name: AZURE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_ID
+          - name: AZURE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_SECRET
+        envFrom:
+          - configMapRef:
+              name: app-config
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: "2"
+          requests:
+            memory: 1Gi
+            cpu: "1"

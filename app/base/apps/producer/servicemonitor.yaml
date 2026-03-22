@@ -8,8 +8,12 @@ metadata:
     release: kube-prometheus-stack
 spec:
   selector:
-    matchLabels:
-      app: producer-football-ncaa
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - producer-football-ncaa-api
+          - producer-football-ncaa-worker
   endpoints:
     - port: http
       path: /metrics

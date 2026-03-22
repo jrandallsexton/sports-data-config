@@ -1,13 +1,13 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: producer-football-ncaa-scaler
+  name: producer-football-ncaa-worker-scaler
   namespace: default
   annotations:
     autoscaling.keda.sh/paused: "false"
 spec:
   scaleTargetRef:
-    name: producer-football-ncaa
+    name: producer-football-ncaa-worker
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
   minReplicaCount: 2     # Producer does not call ESPN - full KEDA scaling enabled

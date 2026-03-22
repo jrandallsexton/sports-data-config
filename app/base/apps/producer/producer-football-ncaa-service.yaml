@@ -4,16 +4,34 @@ metadata:
   name: producer-svc-football-ncaa
   namespace: default
   labels:
-    app: producer-football-ncaa
+    app: producer-football-ncaa-api
 spec:
   selector:
-    app: producer-football-ncaa
+    app: producer-football-ncaa-api
   ports:
   - name: http
     protocol: TCP
     port: 80
     targetPort: 8080
   type: ClusterIP
+---
+# Headless Service for Worker pods — enables Prometheus ServiceMonitor discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: producer-football-ncaa-worker-metrics
+  namespace: default
+  labels:
+    app: producer-football-ncaa-worker
+spec:
+  selector:
+    app: producer-football-ncaa-worker
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  clusterIP: None
 ---
 apiVersion: v1
 kind: Service

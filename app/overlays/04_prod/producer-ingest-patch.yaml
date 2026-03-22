@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-football-ncaa-ingest
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: producer-football-ncaa-ingest
+        image: sportdeets.azurecr.io/sportsdataproducer:3395

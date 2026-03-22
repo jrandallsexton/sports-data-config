@@ -22,6 +22,8 @@ resources:
 patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
+- producer-ingest-patch.yaml
+- producer-api-patch.yaml
 - provider-patch.yaml
 - provider-ingest-patch.yaml
 - provider-api-patch.yaml

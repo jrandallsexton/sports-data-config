@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: producer-football-ncaa
+  name: producer-football-ncaa-worker
   namespace: default
 spec:
   template:
     spec:
       containers:
-      - name: producer
+      - name: producer-football-ncaa-worker
         image: sportdeets.azurecr.io/sportsdataproducer:3395
         resources:
           requests:
