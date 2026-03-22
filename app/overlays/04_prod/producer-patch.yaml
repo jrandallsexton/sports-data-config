@@ -9,6 +9,9 @@ spec:
       containers:
       - name: producer-football-ncaa-worker
         image: sportdeets.azurecr.io/sportsdataproducer:3404
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"
         resources:
           requests:
             memory: 1Gi
