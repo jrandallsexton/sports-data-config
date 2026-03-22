@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - name: producer-football-ncaa-ingest
-        image: sportdeets.azurecr.io/sportsdataproducer:3395
+        image: sportdeets.azurecr.io/sportsdataproducer:3404

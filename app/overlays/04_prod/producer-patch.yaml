@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: producer-football-ncaa-worker
-        image: sportdeets.azurecr.io/sportsdataproducer:3395
+        image: sportdeets.azurecr.io/sportsdataproducer:3404
         resources:
           requests:
             memory: 1Gi
