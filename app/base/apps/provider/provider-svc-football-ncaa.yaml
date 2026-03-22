@@ -15,6 +15,25 @@ spec:
     targetPort: 8080
   type: ClusterIP
 ---
+# Headless Service for Worker pods — enables Prometheus ServiceMonitor discovery
+# so OTel metrics (espn.cache.hit, espn.live.fetch) emitted by Hangfire workers are scraped
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-football-ncaa-worker-metrics
+  namespace: default
+  labels:
+    app: provider-football-ncaa-worker
+spec:
+  selector:
+    app: provider-football-ncaa-worker
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  clusterIP: None
+---
 #MSSQL
 apiVersion: v1
 kind: Service
