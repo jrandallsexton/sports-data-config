@@ -82,7 +82,7 @@ metadata:
   name: provider-football-ncaa-ingest
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: provider-football-ncaa-ingest
@@ -158,7 +158,7 @@ metadata:
   name: provider-football-ncaa-api
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: provider-football-ncaa-api
