@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-football-nfl-worker
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: provider-football-nfl-worker
+        image: sportdeets.azurecr.io/sportsdataprovider:3451
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"
