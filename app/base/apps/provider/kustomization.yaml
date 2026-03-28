@@ -5,6 +5,10 @@ resources:
 - provider-football-ncaa-ingest.yaml
 - provider-football-ncaa-api.yaml
 - provider-svc-football-ncaa.yaml
+- provider-football-nfl-worker.yaml
+- provider-football-nfl-ingest.yaml
+- provider-football-nfl-api.yaml
+- provider-svc-football-nfl.yaml
 - provider-doc-db.yaml
 - servicemonitor.yaml
 - scaledobject.yaml

@@ -5,6 +5,10 @@ resources:
 - producer-football-ncaa-ingest.yaml
 - producer-football-ncaa-api.yaml
 - producer-football-ncaa-service.yaml
+- producer-football-nfl-worker.yaml
+- producer-football-nfl-ingest.yaml
+- producer-football-nfl-api.yaml
+- producer-football-nfl-service.yaml
 - servicemonitor.yaml
 - scaledobject.yaml
 - row-count-cronjob.yaml
