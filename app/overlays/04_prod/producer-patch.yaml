@@ -5,6 +5,9 @@ metadata:
   namespace: default
 spec:
   template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-03-29T14:45:00Z"
     spec:
       containers:
       - name: producer-football-ncaa-worker
