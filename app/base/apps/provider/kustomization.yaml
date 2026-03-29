@@ -11,6 +11,6 @@ resources:
 - provider-svc-football-nfl.yaml
 - provider-doc-db.yaml
 - servicemonitor.yaml
-- scaledobject.yaml
-- scaledobject-nfl.yaml
+- scaledobject-football-ncaa.yaml
+- scaledobject-football-nfl.yaml
 - provider-ingressroute.yaml

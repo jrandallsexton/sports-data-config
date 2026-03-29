@@ -10,7 +10,7 @@ resources:
 - producer-football-nfl-api.yaml
 - producer-football-nfl-service.yaml
 - servicemonitor.yaml
-- scaledobject.yaml
-- scaledobject-nfl.yaml
+- scaledobject-football-ncaa.yaml
+- scaledobject-football-nfl.yaml
 - row-count-cronjob.yaml
 - producer-ingressroute.yaml
