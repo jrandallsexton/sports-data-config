@@ -12,4 +12,5 @@ resources:
 - provider-doc-db.yaml
 - servicemonitor.yaml
 - scaledobject.yaml
+- scaledobject-nfl.yaml
 - provider-ingressroute.yaml

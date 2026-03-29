@@ -1,0 +1,55 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: provider-football-nfl-worker-scaler
+  namespace: default
+  annotations:
+    autoscaling.keda.sh/paused: "false"
+spec:
+  scaleTargetRef:
+    name: provider-football-nfl-worker
+  pollingInterval: 15
+  cooldownPeriod: 300
+  minReplicaCount: 2
+  maxReplicaCount: 4
+  fallback:
+    failureThreshold: 3
+    replicas: 4
+  triggers:
+    - type: postgresql
+      metadata:
+        query: >-
+          SELECT COUNT(*)::int
+          FROM hangfire.jobqueue
+          WHERE fetchedat IS NULL
+            AND queue = 'default'
+        targetQueryValue: "30"
+        activationTargetQueryValue: "1"
+      authenticationRef:
+        name: provider-nfl-hangfire-trigger-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: provider-nfl-hangfire-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: provider-nfl-hangfire-pg-params
+      key: host
+    - parameter: port
+      name: provider-nfl-hangfire-pg-params
+      key: port
+    - parameter: userName
+      name: provider-nfl-hangfire-pg-params
+      key: username
+    - parameter: password
+      name: provider-nfl-hangfire-pg-params
+      key: password
+    - parameter: dbName
+      name: provider-nfl-hangfire-pg-params
+      key: database
+    - parameter: sslmode
+      name: provider-nfl-hangfire-pg-params
+      key: sslmode

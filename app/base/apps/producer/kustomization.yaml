@@ -11,5 +11,6 @@ resources:
 - producer-football-nfl-service.yaml
 - servicemonitor.yaml
 - scaledobject.yaml
+- scaledobject-nfl.yaml
 - row-count-cronjob.yaml
 - producer-ingressroute.yaml
