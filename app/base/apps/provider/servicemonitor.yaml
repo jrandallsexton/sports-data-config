@@ -13,8 +13,10 @@ spec:
         operator: In
         values:
           - provider-football-ncaa-api
+          - provider-football-ncaa-ingest
           - provider-football-ncaa-worker
           - provider-football-nfl-api
+          - provider-football-nfl-ingest
           - provider-football-nfl-worker
   endpoints:
     - port: http
