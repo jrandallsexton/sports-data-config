@@ -14,6 +14,8 @@ spec:
         values:
           - provider-football-ncaa-api
           - provider-football-ncaa-worker
+          - provider-football-nfl-api
+          - provider-football-nfl-worker
   endpoints:
     - port: http
       path: /metrics
