@@ -55,15 +55,28 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: messaging-sportdeets
+  name: messaging-footballncaa-sportdeets
   namespace: messaging
 spec:
-  secretName: messaging-sportdeets-tls
+  secretName: messaging-footballncaa-sportdeets-tls
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - messaging.sportdeets.com
+    - messaging-footballncaa.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: messaging-footballnfl-sportdeets
+  namespace: messaging
+spec:
+  secretName: messaging-footballnfl-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - messaging-footballnfl.sportdeets.com
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
