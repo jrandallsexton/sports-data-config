@@ -4,6 +4,7 @@ metadata:
   name: producer-football-ncaa-ingest
   namespace: default
 spec:
+  replicas: 0
   template:
     spec:
       containers:
