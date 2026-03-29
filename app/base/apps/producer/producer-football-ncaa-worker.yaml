@@ -6,7 +6,7 @@ metadata:
   name: producer-football-ncaa-worker
   namespace: default
 spec:
-  replicas: 0  # TEMPORARY: set to 0 for migration fix. Remove and restore KEDA after deploy.
+  # replicas managed by KEDA ScaledObject — do not set here
   selector:
     matchLabels:
       app: producer-football-ncaa-worker

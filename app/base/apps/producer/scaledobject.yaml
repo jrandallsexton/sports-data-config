@@ -4,8 +4,7 @@ metadata:
   name: producer-football-ncaa-worker-scaler
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "true"
-    autoscaling.keda.sh/paused-replicas: "0"
+    autoscaling.keda.sh/paused: "false"
 spec:
   scaleTargetRef:
     name: producer-football-ncaa-worker

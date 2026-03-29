@@ -4,7 +4,6 @@ metadata:
   name: producer-football-nfl-api
   namespace: default
 spec:
-  replicas: 0
   template:
     spec:
       containers:
