@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: producer-football-nfl-api
   namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/reconcile: enabled
 spec:
   template:
     metadata:
