@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: provider-football-nfl-ingest
-        image: sportdeets.azurecr.io/sportsdataprovider:3482
+        image: sportdeets.azurecr.io/sportsdataprovider:3489
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
