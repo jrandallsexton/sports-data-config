@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: producer-football-nfl-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`producer.football-nfl.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: producer-svc-football-nfl
+          port: 80
+  tls:
+    secretName: producer-football-nfl-sportdeets-tls

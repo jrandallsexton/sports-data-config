@@ -130,3 +130,29 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - provider.football-ncaa.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: producer-football-nfl-sportdeets
+  namespace: default
+spec:
+  secretName: producer-football-nfl-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - producer.football-nfl.sportdeets.com
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: provider-football-nfl-sportdeets
+  namespace: default
+spec:
+  secretName: provider-football-nfl-sportdeets-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - provider.football-nfl.sportdeets.com

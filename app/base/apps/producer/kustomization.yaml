@@ -14,3 +14,4 @@ resources:
 - scaledobject-football-nfl.yaml
 - row-count-cronjob.yaml
 - producer-ingressroute.yaml
+- producer-ingressroute-nfl.yaml

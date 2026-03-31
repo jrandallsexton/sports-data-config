@@ -14,3 +14,4 @@ resources:
 - scaledobject-football-ncaa.yaml
 - scaledobject-football-nfl.yaml
 - provider-ingressroute.yaml
+- provider-ingressroute-nfl.yaml
