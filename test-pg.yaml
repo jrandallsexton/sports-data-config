@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pg-explorer
+  namespace: default
+spec:
+  containers:
+  - name: psql
+    image: postgres:15-alpine
+    command: ["sleep", "3600"]
+    env:
+    - name: PGHOST
+      valueFrom: { secretKeyRef: { name: postgres-credentials, key: host } }
+    - name: PGPORT
+      valueFrom: { secretKeyRef: { name: postgres-credentials, key: port } }
+    - name: PGDATABASE
+      valueFrom: { secretKeyRef: { name: postgres-credentials, key: database } }
+    - name: PGUSER
+      valueFrom: { secretKeyRef: { name: postgres-credentials, key: username } }
+    - name: PGPASSWORD
+      valueFrom: { secretKeyRef: { name: postgres-credentials, key: password } }
+  restartPolicy: Never
