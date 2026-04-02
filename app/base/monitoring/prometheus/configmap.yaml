@@ -54,6 +54,8 @@ data:
           disable_signout_menu: false
           oauth_skip_org_role_update_sync: false
           oauth_allow_insecure_email_lookup: true
+        metrics:
+          enabled: true
         users:
           allow_sign_up: false
       env:
