@@ -5,6 +5,7 @@ metadata:
   namespace: default
   annotations:
     autoscaling.keda.sh/paused: "true"
+    autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
     name: producer-football-nfl-worker
