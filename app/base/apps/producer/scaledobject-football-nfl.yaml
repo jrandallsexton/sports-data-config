@@ -4,14 +4,13 @@ metadata:
   name: producer-football-nfl-worker-scaler
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "true"
-    autoscaling.keda.sh/paused-replicas: "0"
+    autoscaling.keda.sh/paused: "false"
 spec:
   scaleTargetRef:
     name: producer-football-nfl-worker
   pollingInterval: 15
   cooldownPeriod: 300
-  minReplicaCount: 0
+  minReplicaCount: 2
   maxReplicaCount: 4
   triggers:
     - type: postgresql
