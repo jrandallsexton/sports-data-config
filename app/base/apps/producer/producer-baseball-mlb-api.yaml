@@ -1,0 +1,75 @@
+# Producer API — serves HTTP requests (document retrieval, controllers)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-baseball-mlb-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producer-baseball-mlb-api
+  template:
+    metadata:
+      labels:
+        app: producer-baseball-mlb-api
+        producer-role: api
+    spec:
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: producer-baseball-mlb-api
+        image: sportdeets.azurecr.io/sportsdataproducer:1343
+        imagePullPolicy: IfNotPresent
+        command: ["dotnet"]
+        args: ["SportsData.Producer.dll", "-mode", "BaseballMlb", "-role", "Api"]
+        env:
+          - name: APPCONFIG_CONNSTR
+            valueFrom:
+              secretKeyRef:
+                name: azure-app-config-mlb
+                key: connectionstring
+          - name: AZURE_TENANT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_TENANT_ID
+          - name: AZURE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_ID
+          - name: AZURE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_SECRET
+        envFrom:
+          - configMapRef:
+              name: app-config
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/health/live
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: "1"
+          requests:
+            memory: 512Mi
+            cpu: "0.25"

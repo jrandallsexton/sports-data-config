@@ -13,5 +13,10 @@ resources:
 - scaledobject-football-ncaa.yaml
 - scaledobject-football-nfl.yaml
 - row-count-cronjob.yaml
+- producer-baseball-mlb-worker.yaml
+- producer-baseball-mlb-ingest.yaml
+- producer-baseball-mlb-api.yaml
+- producer-baseball-mlb-service.yaml
+- scaledobject-baseball-mlb.yaml
 - producer-ingressroute.yaml
 - producer-ingressroute-nfl.yaml

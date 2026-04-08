@@ -1,0 +1,52 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: producer-baseball-mlb-worker-scaler
+  namespace: default
+  annotations:
+    autoscaling.keda.sh/paused: "true"
+spec:
+  scaleTargetRef:
+    name: producer-baseball-mlb-worker
+  pollingInterval: 15
+  cooldownPeriod: 300
+  minReplicaCount: 0
+  maxReplicaCount: 2
+  triggers:
+    - type: postgresql
+      metadata:
+        query: >-
+          SELECT COUNT(*)::int
+          FROM hangfire.jobqueue
+          WHERE fetchedat IS NULL
+            AND queue = 'default'
+        targetQueryValue: "30"
+        activationTargetQueryValue: "1"
+      authenticationRef:
+        name: producer-mlb-hangfire-trigger-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: producer-mlb-hangfire-trigger-auth
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: producer-mlb-hangfire-pg-params
+      key: host
+    - parameter: port
+      name: producer-mlb-hangfire-pg-params
+      key: port
+    - parameter: userName
+      name: producer-mlb-hangfire-pg-params
+      key: username
+    - parameter: password
+      name: producer-mlb-hangfire-pg-params
+      key: password
+    - parameter: dbName
+      name: producer-mlb-hangfire-pg-params
+      key: database
+    - parameter: sslmode
+      name: producer-mlb-hangfire-pg-params
+      key: sslmode

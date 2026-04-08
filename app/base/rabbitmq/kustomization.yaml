@@ -6,5 +6,6 @@ resources:
   - namespace.yaml
   - rabbitmq-cluster.yaml
   - rabbitmq-cluster-nfl.yaml
+  - rabbitmq-cluster-mlb.yaml
   - servicemonitor.yaml
   - ingressroute.yaml

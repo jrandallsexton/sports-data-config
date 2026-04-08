@@ -13,5 +13,10 @@ resources:
 - servicemonitor.yaml
 - scaledobject-football-ncaa.yaml
 - scaledobject-football-nfl.yaml
+- provider-baseball-mlb-worker.yaml
+- provider-baseball-mlb-ingest.yaml
+- provider-baseball-mlb-api.yaml
+- provider-svc-baseball-mlb.yaml
+- scaledobject-baseball-mlb.yaml
 - provider-ingressroute.yaml
 - provider-ingressroute-nfl.yaml
