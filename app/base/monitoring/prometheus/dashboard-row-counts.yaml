@@ -114,8 +114,8 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sportsdata_table_row_count{table=\"$table\"}",
-              "legendFormat": "{{table}}",
+              "expr": "sportsdata_table_row_count{table=\"$table\",database=~\"$database\"}",
+              "legendFormat": "{{database}} / {{table}}",
               "range": true,
               "refId": "A"
             }
@@ -148,14 +148,45 @@ data:
               "type": "prometheus",
               "uid": "prometheus"
             },
-            "definition": "label_values(sportsdata_table_row_count, table)",
+            "definition": "label_values(sportsdata_table_row_count, database)",
+            "hide": 0,
+            "includeAll": true,
+            "multi": true,
+            "name": "database",
+            "options": [],
+            "query": {
+              "query": "label_values(sportsdata_table_row_count, database)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          },
+          {
+            "allValue": ".*",
+            "current": {
+              "selected": true,
+              "text": [
+                "All"
+              ],
+              "value": [
+                "$__all"
+              ]
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "definition": "label_values(sportsdata_table_row_count{database=~\"$database\"}, table)",
             "hide": 0,
             "includeAll": true,
             "multi": true,
             "name": "table",
             "options": [],
             "query": {
-              "query": "label_values(sportsdata_table_row_count, table)",
+              "query": "label_values(sportsdata_table_row_count{database=~\"$database\"}, table)",
               "refId": "StandardVariableQuery"
             },
             "refresh": 1,
@@ -174,5 +205,5 @@ data:
       "timezone": "",
       "title": "PostgreSQL Table Row Counts",
       "uid": "postgres-row-counts",
-      "version": 1
+      "version": 2
     }
