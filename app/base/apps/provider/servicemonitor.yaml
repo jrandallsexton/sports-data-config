@@ -18,6 +18,9 @@ spec:
           - provider-football-nfl-api
           - provider-football-nfl-ingest
           - provider-football-nfl-worker
+          - provider-baseball-mlb-api
+          - provider-baseball-mlb-ingest
+          - provider-baseball-mlb-worker
   endpoints:
     - port: http
       path: /metrics
