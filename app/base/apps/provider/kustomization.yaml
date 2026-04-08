@@ -20,3 +20,4 @@ resources:
 - scaledobject-baseball-mlb.yaml
 - provider-ingressroute.yaml
 - provider-ingressroute-nfl.yaml
+- provider-ingressroute-mlb.yaml
