@@ -20,7 +20,7 @@ spec:
       - name: acr-secret
       containers:
       - name: provider-baseball-mlb-api
-        image: sportdeets.azurecr.io/sportsdataprovider:1348
+        image: sportdeets.azurecr.io/sportsdataprovider:3670
         imagePullPolicy: IfNotPresent
         command: ["dotnet"]
         args: ["SportsData.Provider.dll", "-mode", "BaseballMlb", "-role", "Api"]
