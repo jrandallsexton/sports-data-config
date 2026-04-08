@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-baseball-mlb-api
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-04-08T11:30:00Z"
+    spec:
+      containers:
+      - name: provider-baseball-mlb-api
+        image: sportdeets.azurecr.io/sportsdataprovider:3686
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"

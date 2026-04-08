@@ -28,12 +28,18 @@ patchesStrategicMerge:
 - producer-nfl-patch.yaml
 - producer-nfl-ingest-patch.yaml
 - producer-nfl-api-patch.yaml
+- producer-mlb-patch.yaml
+- producer-mlb-ingest-patch.yaml
+- producer-mlb-api-patch.yaml
 - provider-patch.yaml
 - provider-ingest-patch.yaml
 - provider-api-patch.yaml
 - provider-nfl-patch.yaml
 - provider-nfl-ingest-patch.yaml
 - provider-nfl-api-patch.yaml
+- provider-mlb-patch.yaml
+- provider-mlb-ingest-patch.yaml
+- provider-mlb-api-patch.yaml
 - web-ui-patch.yaml
 - jobs-dashboard-patch.yaml
 configMapGenerator:
