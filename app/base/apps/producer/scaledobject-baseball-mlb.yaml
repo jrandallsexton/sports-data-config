@@ -11,7 +11,7 @@ spec:
   pollingInterval: 15
   cooldownPeriod: 300
   minReplicaCount: 1
-  maxReplicaCount: 4
+  maxReplicaCount: 5
   triggers:
     - type: postgresql
       metadata:
