@@ -10,7 +10,7 @@ spec:
     name: producer-football-ncaa-worker
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
-  minReplicaCount: 2     # Producer does not call ESPN - full KEDA scaling enabled
+  minReplicaCount: 1     # Producer does not call ESPN - full KEDA scaling enabled
   maxReplicaCount: 4
   triggers:
     - type: postgresql
