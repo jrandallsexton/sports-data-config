@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: producer-football-ncaa-ingest
-        image: sportdeets.azurecr.io/sportsdataproducer:3733
+        image: sportdeets.azurecr.io/sportsdataproducer:3737
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
