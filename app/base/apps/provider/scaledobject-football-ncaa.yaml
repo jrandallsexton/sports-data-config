@@ -10,7 +10,7 @@ spec:
     name: provider-football-ncaa-worker
   pollingInterval: 15    # Check every 15 seconds
   cooldownPeriod: 300    # Wait 5 min before scaling down
-  minReplicaCount: 2     # Backlog of ~1.7M jobs; no reason to scale below max
+  minReplicaCount: 1     # Backlog of ~1.7M jobs; no reason to scale below max
   maxReplicaCount: 4     # For live season tracking, increase to 4-6
   fallback:
     failureThreshold: 3  # After 3 consecutive trigger query failures, hold replicas
