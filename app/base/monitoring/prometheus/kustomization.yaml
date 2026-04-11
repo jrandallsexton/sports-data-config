@@ -13,4 +13,5 @@ resources:
   - dashboard-historical-sourcing-sagas.yaml
   - dashboard-hangfire.yaml
   - dashboard-espn-cache-performance.yaml
+  - dashboard-document-processing.yaml
   - hangfire-exporter-cronjob.yaml
