@@ -4,7 +4,7 @@ metadata:
   name: producer-baseball-mlb-worker-scaler
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "true"
+    autoscaling.keda.sh/paused: "false"
     autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
