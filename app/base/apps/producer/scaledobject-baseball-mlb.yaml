@@ -10,6 +10,9 @@ spec:
   cooldownPeriod: 300
   minReplicaCount: 1
   maxReplicaCount: 5
+  fallback:
+    failureThreshold: 3
+    replicas: 1
   triggers:
     - type: postgresql
       metadata:
