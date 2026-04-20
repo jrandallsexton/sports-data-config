@@ -8,8 +8,8 @@ spec:
     name: provider-baseball-mlb-worker
   pollingInterval: 15
   cooldownPeriod: 300
-  minReplicaCount: 1
-  maxReplicaCount: 4
+  minReplicaCount: 2
+  maxReplicaCount: 5
   fallback:
     failureThreshold: 3
     replicas: 2
