@@ -12,7 +12,7 @@ metadata:
     #
     # `paused: "true"` halts the scaler reconcile loop; `paused-replicas: "0"`
     # additionally pins the target count at 0 so no pods remain running.
-    autoscaling.keda.sh/paused: "true"
+    autoscaling.keda.sh/paused: "false"
     autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
