@@ -6,9 +6,6 @@ metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/reconcile: enabled
 spec:
-  # Paused 2026-04-24: abandoning full historical MLB sourcing; focusing on
-  # current-season in-season testing only. Restore to 1 when resuming ingest.
-  replicas: 0
   template:
     metadata:
       annotations:
