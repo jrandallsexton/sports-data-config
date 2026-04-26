@@ -4,16 +4,12 @@ metadata:
   name: provider-baseball-mlb-worker-scaler
   namespace: default
   annotations:
-    # Paused 2026-04-24: abandoning full historical MLB sourcing; focusing on
-    # current-season in-season testing only. Remove both annotations to
-    # resume KEDA scaling (minReplicaCount=2, maxReplicaCount=5). Setting
-    # replicas=0 on the Deployment alone won't stick — KEDA continuously
-    # reconciles the target.
-    #
-    # `paused: "true"` halts the scaler reconcile loop; `paused-replicas: "0"`
-    # additionally pins the target count at 0 so no pods remain running.
+    # Toggle paused: "true" + add paused-replicas: "0" to halt scaling.
+    # KEDA treats paused-replicas as authoritative even when
+    # paused: "false", so it MUST be removed (NOT left at "0") to
+    # resume normal scaling — that's the gotcha that bit us on
+    # 2026-04-25.
     autoscaling.keda.sh/paused: "false"
-    autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
     name: provider-baseball-mlb-worker

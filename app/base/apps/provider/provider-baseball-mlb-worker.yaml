@@ -5,8 +5,10 @@ metadata:
   name: provider-baseball-mlb-worker
   namespace: default
   annotations:
-    autoscaling.keda.sh/paused: "true"
-    autoscaling.keda.sh/paused-replicas: "0"
+    # Toggle paused: "true" + add paused-replicas: "0" to halt scaling
+    # at the Deployment level. paused-replicas MUST be removed (NOT
+    # left at "0") to resume — KEDA pins the target while present.
+    autoscaling.keda.sh/paused: "false"
 spec:
   # replicas managed by KEDA ScaledObject — do not set here
   selector:
