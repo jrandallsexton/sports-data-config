@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - name: jobs-dashboard
-        image: sportdeets.azurecr.io/sportsdatajobsdashboard:3965
+        image: sportdeets.azurecr.io/sportsdatajobsdashboard:3984
