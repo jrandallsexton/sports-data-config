@@ -1,14 +1,12 @@
 # Provider Worker — processes Hangfire jobs (ESPN fetches, document processing)
+# Replicas managed by KEDA ScaledObject — do not set here
+# Pause toggle (autoscaling.keda.sh/paused) lives on the ScaledObject in
+# scaledobject-baseball-mlb.yaml — KEDA only reads it from there.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: provider-baseball-mlb-worker
   namespace: default
-  annotations:
-    # Toggle paused: "true" + add paused-replicas: "0" to halt scaling
-    # at the Deployment level. paused-replicas MUST be removed (NOT
-    # left at "0") to resume — KEDA pins the target while present.
-    autoscaling.keda.sh/paused: "false"
 spec:
   # replicas managed by KEDA ScaledObject — do not set here
   selector:
