@@ -141,7 +141,7 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__rate_interval]))",
+              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__rate_interval])) or vector(0)",
               "legendFormat": "MongoDB Cache Hits",
               "range": true,
               "refId": "A"
@@ -219,7 +219,7 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) / (sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) + sum(increase(espn_live_fetch_total{job=~\"$job\"}[5m]))) * 100",
+              "expr": "(sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) or vector(0)) / ((sum(increase(espn_cache_hit_total{job=~\"$job\"}[5m])) or vector(0)) + (sum(increase(espn_live_fetch_total{job=~\"$job\"}[5m])) or vector(0))) * 100",
               "legendFormat": "Cache Hit Rate",
               "range": true,
               "refId": "A"
@@ -277,7 +277,7 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__range]))",
+              "expr": "sum(increase(espn_cache_hit_total{job=~\"$job\"}[$__range])) or vector(0)",
               "legendFormat": "Total MongoDB Cache Hits",
               "instant": true,
               "refId": "A"
@@ -379,14 +379,14 @@ data:
               "type": "prometheus",
               "uid": "${datasource}"
             },
-            "definition": "label_values(espn_cache_hit_total, job)",
+            "definition": "label_values(espn_live_fetch_total, job)",
             "hide": 0,
             "includeAll": true,
             "multi": true,
             "name": "job",
             "options": [],
             "query": {
-              "query": "label_values(espn_cache_hit_total, job)",
+              "query": "label_values(espn_live_fetch_total, job)",
               "refId": "StandardVariableQuery"
             },
             "refresh": 1,
