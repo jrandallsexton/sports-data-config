@@ -5,7 +5,7 @@ metadata:
   name: producer-baseball-mlb-ingest
   namespace: default
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: producer-baseball-mlb-ingest
