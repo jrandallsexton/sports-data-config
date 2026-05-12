@@ -7,6 +7,8 @@ resources:
   - rabbitmq-cluster.yaml
   - rabbitmq-cluster-nfl.yaml
   - rabbitmq-cluster-mlb.yaml
+  - rabbitmq-cluster-api.yaml
+  - rabbitmq-cluster-baseball-mlb.yaml
   - servicemonitor.yaml
   - ingressroute.yaml
   - shovels
