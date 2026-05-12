@@ -1,9 +1,10 @@
 ---
 # NCAA RabbitMQ Management UI — messaging-footballncaa.sportdeets.com
+# Points at the new `rabbitmq-football-ncaa` cluster (Round 2 Phase 2 swap).
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: rabbitmq-ncaa-http
+  name: rabbitmq-football-ncaa-http
   namespace: messaging
 spec:
   entryPoints:
@@ -15,13 +16,13 @@ spec:
         - name: https-redirect
           namespace: traefik
       services:
-        - name: rabbitmq
+        - name: rabbitmq-football-ncaa
           port: 15672
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: rabbitmq-ncaa-https
+  name: rabbitmq-football-ncaa-https
   namespace: messaging
 spec:
   entryPoints:
@@ -30,16 +31,17 @@ spec:
     - match: Host(`messaging-footballncaa.sportdeets.com`)
       kind: Rule
       services:
-        - name: rabbitmq
+        - name: rabbitmq-football-ncaa
           port: 15672
   tls:
     secretName: messaging-footballncaa-sportdeets-tls
 ---
 # NFL RabbitMQ Management UI — messaging-footballnfl.sportdeets.com
+# Points at the new `rabbitmq-football-nfl` cluster (Round 2 Phase 2 swap).
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: rabbitmq-nfl-http
+  name: rabbitmq-football-nfl-http
   namespace: messaging
 spec:
   entryPoints:
@@ -51,13 +53,13 @@ spec:
         - name: https-redirect
           namespace: traefik
       services:
-        - name: rabbitmq-nfl
+        - name: rabbitmq-football-nfl
           port: 15672
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: rabbitmq-nfl-https
+  name: rabbitmq-football-nfl-https
   namespace: messaging
 spec:
   entryPoints:
@@ -66,7 +68,7 @@ spec:
     - match: Host(`messaging-footballnfl.sportdeets.com`)
       kind: Rule
       services:
-        - name: rabbitmq-nfl
+        - name: rabbitmq-football-nfl
           port: 15672
   tls:
     secretName: messaging-footballnfl-sportdeets-tls
