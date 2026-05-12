@@ -1,0 +1,20 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-contest-status-changed-ncaa-to-api
+  namespace: messaging
+spec:
+  name: shovel-contest-status-changed-ncaa-to-api
+  uriSecret:
+    name: shovel-football-ncaa-to-api-credentials
+  # ContestStatusChanged lives under the sport-neutral Contests namespace,
+  # not Contests.Football — the same exchange name is reused on every sport
+  # broker, only the broker pair changes.
+  srcExchange: "SportsData.Core.Eventing.Events.Contests:ContestStatusChanged"
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests:ContestStatusChanged"
+  ackMode: "on-confirm"
+  srcPrefetchCount: 1000
+  rabbitmqClusterReference:
+    name: rabbitmq-api
+    namespace: messaging

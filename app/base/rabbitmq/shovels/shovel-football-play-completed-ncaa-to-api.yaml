@@ -1,0 +1,31 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-football-play-completed-ncaa-to-api
+  namespace: messaging
+spec:
+  name: shovel-football-play-completed-ncaa-to-api
+  # Credentials secret is created out-of-band from the cluster-operator-managed
+  # default-user secrets (rabbitmq-football-ncaa-default-user +
+  # rabbitmq-api-default-user). See README.md for the kubectl recipe — note the
+  # %2F vhost suffix the URIs require.
+  uriSecret:
+    name: shovel-football-ncaa-to-api-credentials
+  srcExchange: "SportsData.Core.Eventing.Events.Contests.Football:FootballPlayCompleted"
+  # Empty key — MassTransit message-type exchanges are fanout in its RabbitMQ
+  # topology, so the routing key is ignored. Empty is the conventional value.
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests.Football:FootballPlayCompleted"
+  # At-least-once: the shovel acks the source message only after the destination
+  # broker confirms receipt. Trades a small latency hit for no message loss
+  # across shovel restarts.
+  ackMode: "on-confirm"
+  # Generous prefetch — a football play burst (live game) can produce dozens of
+  # rapid messages. Same value as the MLB shovels for consistency.
+  srcPrefetchCount: 1000
+  # Run the shovel on the destination cluster (pull-mode). The shovel process
+  # lives inside the `rabbitmq-api` broker pods and opens an outbound AMQP
+  # connection to `rabbitmq-football-ncaa` to read.
+  rabbitmqClusterReference:
+    name: rabbitmq-api
+    namespace: messaging

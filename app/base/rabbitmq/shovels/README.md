@@ -6,18 +6,19 @@ messages from a per-sport-league Producer RabbitMQ cluster (e.g.
 where the API consumer subscribes.
 
 See `docs/broker-detangle-plan.md` in the sports-data repo for the
-Round 1 migration context — why every sport-league + API gets its own
-broker, and why cross-service integration events need shovels.
+Round 1 (MLB+API) + Round 2 (football) migration context — why every
+sport-league + API gets its own broker, and why cross-service
+integration events need shovels.
 
 ## Prerequisites
 
 1. **Messaging Topology Operator (MTO).** Installed via
    `app/base/rabbitmq-topology-operator/`. Provides the `Shovel` CRD.
-2. **Credentials secret.** Must be created in the `messaging` namespace
+2. **Credentials secrets.** Must be created in the `messaging` namespace
    before the Shovel CRDs reconcile. See "Create the credentials
-   secret" below.
+   secrets" below — one Secret per source broker.
 
-## Create the credentials secret
+## Create the credentials secrets
 
 The shovel's `uriSecret` references a Kubernetes Secret containing the
 source and destination AMQP URIs. We build that secret from the
@@ -31,30 +32,79 @@ each `RabbitmqCluster`.
 > Symptom if you skip this: shovel never starts, broker logs show
 > "access to vhost refused".
 
+> **Exchange pre-declare gotcha.** MassTransit only auto-declares the
+> source exchange on first publish. On a freshly-provisioned Producer
+> broker, the exchange may not exist yet — the shovel's `queue.bind`
+> will fail with `NOT_FOUND - no exchange '<name>' in vhost '/'` and
+> `rabbitmqctl shovel_status` reports `terminated`. Pre-declare the
+> fanout source exchanges on each new broker before bringing up its
+> shovels. See the pre-declare loop in
+> `docs/broker-detangle-plan.md` (Round 2 Phase 1).
+
+One Secret per source broker. Repeat the block below substituting the
+right `*-default-user` secret + Secret name for each sport-league.
+
+### MLB
+
 ```bash
-# Read the auto-managed default-user connection strings.
 SRC_URI=$(kubectl get secret rabbitmq-baseball-mlb-default-user -n messaging \
   -o jsonpath='{.data.connection_string}' | base64 -d)
 DEST_URI=$(kubectl get secret rabbitmq-api-default-user -n messaging \
   -o jsonpath='{.data.connection_string}' | base64 -d)
-
-# Fix the empty-vhost suffix to explicitly target the default vhost `/`.
 SRC_URI="${SRC_URI%/}/%2F"
 DEST_URI="${DEST_URI%/}/%2F"
 
-# Create the combined secret MTO's Shovel CRD expects.
 kubectl create secret generic shovel-baseball-mlb-to-api-credentials \
   -n messaging \
   --from-literal=srcUri="${SRC_URI}" \
   --from-literal=destUri="${DEST_URI}"
 
-# Tell Flux not to prune this out-of-band secret.
 kubectl annotate secret shovel-baseball-mlb-to-api-credentials \
   -n messaging \
   kustomize.toolkit.fluxcd.io/prune=disabled
 ```
 
-Idempotent re-run: `kubectl delete secret shovel-baseball-mlb-to-api-credentials -n messaging` first if the source default-user passwords have rotated, then re-run the create command.
+### NCAA football
+
+```bash
+SRC_URI=$(kubectl get secret rabbitmq-football-ncaa-default-user -n messaging \
+  -o jsonpath='{.data.connection_string}' | base64 -d)
+DEST_URI=$(kubectl get secret rabbitmq-api-default-user -n messaging \
+  -o jsonpath='{.data.connection_string}' | base64 -d)
+SRC_URI="${SRC_URI%/}/%2F"
+DEST_URI="${DEST_URI%/}/%2F"
+
+kubectl create secret generic shovel-football-ncaa-to-api-credentials \
+  -n messaging \
+  --from-literal=srcUri="${SRC_URI}" \
+  --from-literal=destUri="${DEST_URI}"
+
+kubectl annotate secret shovel-football-ncaa-to-api-credentials \
+  -n messaging \
+  kustomize.toolkit.fluxcd.io/prune=disabled
+```
+
+### NFL
+
+```bash
+SRC_URI=$(kubectl get secret rabbitmq-football-nfl-default-user -n messaging \
+  -o jsonpath='{.data.connection_string}' | base64 -d)
+DEST_URI=$(kubectl get secret rabbitmq-api-default-user -n messaging \
+  -o jsonpath='{.data.connection_string}' | base64 -d)
+SRC_URI="${SRC_URI%/}/%2F"
+DEST_URI="${DEST_URI%/}/%2F"
+
+kubectl create secret generic shovel-football-nfl-to-api-credentials \
+  -n messaging \
+  --from-literal=srcUri="${SRC_URI}" \
+  --from-literal=destUri="${DEST_URI}"
+
+kubectl annotate secret shovel-football-nfl-to-api-credentials \
+  -n messaging \
+  kustomize.toolkit.fluxcd.io/prune=disabled
+```
+
+Idempotent re-run: `kubectl delete secret <name> -n messaging` first if the source default-user passwords have rotated, then re-run the create command.
 
 ## Why isn't this secret committed to git?
 
@@ -84,20 +134,24 @@ in the Grafana dashboard once we add panels for them.
 
 When a new cross-service event type is introduced (rare):
 
-1. Add a new `shovel-{event-name}-mlb-to-api.yaml` in this directory
-   mirroring the existing files. Same `srcExchange` / `destExchange`
-   (MassTransit uses identical names across brokers), same `uriSecret`
-   reference, same `rabbitmqClusterReference`.
-2. Add the filename to `kustomization.yaml`.
-3. Commit + push; Flux will reconcile.
+1. Add a new `shovel-{event-name}-{league}-to-api.yaml` per source
+   broker in this directory mirroring the existing files. Same
+   `srcExchange` / `destExchange` (MassTransit uses identical names
+   across brokers), same `uriSecret` reference for that league, same
+   `rabbitmqClusterReference` (`rabbitmq-api`).
+2. Pre-declare the source exchange on each Producer broker before
+   the shovel reconciles (see the gotcha note above).
+3. Add the filename(s) to `kustomization.yaml`.
+4. Commit + push; Flux will reconcile.
 
-When a new sport-league adds its own broker (Round 2 — NCAA, NFL):
+When a new sport-league joins (post Round 2):
 
-1. Create a new pair of shovels with source `rabbitmq-football-ncaa`
-   (or `rabbitmq-football-nfl`) instead of `rabbitmq-baseball-mlb`.
-   Same destination (`rabbitmq-api`).
-2. Create a separate credentials secret
-   (e.g. `shovel-football-ncaa-to-api-credentials`) using the recipe
-   above, substituting the new sport-league's `*-default-user` secret
-   for the source URI.
-3. Reference the new secret from the new shovel CRDs.
+1. Provision the cluster (mirror `rabbitmq-cluster-baseball-mlb.yaml`).
+2. Add a new pair of shovels with source set to the new cluster, dest
+   `rabbitmq-api`.
+3. Create a new credentials Secret
+   (`shovel-{league}-to-api-credentials`) using the per-league recipe
+   pattern above.
+4. Reference the new Secret from the new shovel CRDs.
+5. Add a new `Prod.{Sport}{League}` App Config override for the new
+   broker host + matching `RabbitMqPassword-Prod-{Suffix}` KV value.
