@@ -6,6 +6,7 @@ resources:
 - ../../base/serviceaccounts
 - ../../base/caching
 - ../../base/rabbitmq
+- ../../base/rabbitmq-topology-operator
 - ../../base/keda
 - ../../base/logging
 - ../../base/ollama

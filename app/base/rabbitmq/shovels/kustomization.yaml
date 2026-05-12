@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# RabbitMQ shovel definitions for cross-broker integration event delivery.
+#
+# Each Shovel CRD requires the secret `shovel-mlb-to-base-credentials`
+# (and equivalent per-sport pairs as more sports are added) to exist in
+# the messaging namespace BEFORE the Shovel reconciles successfully. The
+# secret is created out-of-band via kubectl from the cluster-operator-
+# managed default-user secrets — see README.md in this directory.
+#
+# Why out-of-band: the credentials live in
+# `rabbitmq-{cluster}-default-user` secrets that the cluster operator
+# creates and owns. They rotate if the cluster is rebuilt, so we don't
+# commit the values to git. The Shovel CRDs reference the credentials
+# secret by name; MTO retries until the secret is present.
+#
+# See docs/mlb-replay-broker-diagnosis.md in the sports-data repo for
+# the full architectural context (per-sport broker isolation, why
+# cross-service events need bridging).
+
+resources:
+  - shovel-baseball-play-completed.yaml
+  - shovel-contest-status-changed.yaml

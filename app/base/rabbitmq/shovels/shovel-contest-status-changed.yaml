@@ -1,0 +1,20 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-contest-status-changed-mlb-to-base
+  namespace: messaging
+spec:
+  name: shovel-contest-status-changed-mlb-to-base
+  uriSecret:
+    name: shovel-mlb-to-base-credentials
+  # ContestStatusChanged lives under the sport-neutral Contests namespace,
+  # not Contests.Baseball — the same exchange name will be reusable when NFL
+  # (or any future sport) needs a shovel, only the broker pair changes.
+  srcExchange: "SportsData.Core.Eventing.Events.Contests:ContestStatusChanged"
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests:ContestStatusChanged"
+  ackMode: "on-confirm"
+  srcPrefetchCount: 1000
+  rabbitmqClusterReference:
+    name: rabbitmq
+    namespace: messaging

@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# RabbitMQ Messaging Topology Operator (MTO).
+#
+# Sibling to the rabbitmq-cluster-operator (which lives in
+# app/base/rabbitmq/operator.yaml). MTO provides additional CRDs for
+# declarative management of broker topology — Queue, Exchange, Binding,
+# Policy, User, Permission, Vhost, Federation, Shovel, OperatorPolicy,
+# SchemaReplication — by reconciling against the RabbitMQ management API
+# of each RabbitmqCluster.
+#
+# Required for the Shovel CRDs in app/base/rabbitmq/shovels/, which bridge
+# cross-service integration events from the per-sport RabbitMQ clusters
+# (rabbitmq-mlb, rabbitmq-nfl) to the base rabbitmq cluster where the API
+# consumer subscribes. See docs/mlb-replay-broker-diagnosis.md in the
+# sports-data repo for the full architectural context.
+#
+# The release manifest below pulls in the operator Deployment, CRDs, RBAC,
+# and a cert-manager Certificate for the admission webhook. cert-manager is
+# a hard prerequisite — already deployed in this cluster via
+# app/base/cert-manager.
+#
+# Upstream releases: https://github.com/rabbitmq/messaging-topology-operator/releases
+# Pin below; bump deliberately when upgrading and re-test in the messaging
+# namespace before promoting.
+
+resources:
+  - https://github.com/rabbitmq/messaging-topology-operator/releases/download/v1.18.2/messaging-topology-operator-with-certmanager.yaml

@@ -1,0 +1,30 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-baseball-play-completed-mlb-to-base
+  namespace: messaging
+spec:
+  name: shovel-baseball-play-completed-mlb-to-base
+  # Credentials secret is created out-of-band from the cluster-operator-managed
+  # default-user secrets (rabbitmq-mlb-default-user + rabbitmq-default-user).
+  # See README.md in this directory for the exact kubectl recipe.
+  uriSecret:
+    name: shovel-mlb-to-base-credentials
+  srcExchange: "SportsData.Core.Eventing.Events.Contests.Baseball:BaseballPlayCompleted"
+  # Empty key — MassTransit message-type exchanges are fanout in its RabbitMQ
+  # topology, so the routing key is ignored. Empty is the conventional value.
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests.Baseball:BaseballPlayCompleted"
+  # At-least-once: the shovel acks the source message only after the destination
+  # broker confirms receipt. Trades a small latency hit for no message loss
+  # across shovel restarts.
+  ackMode: "on-confirm"
+  # Generous prefetch — a baseball replay can burst hundreds of small messages
+  # in a few seconds. Default (1000) keeps the shovel from stalling under load.
+  srcPrefetchCount: 1000
+  # Run the shovel on the destination cluster (pull-mode). The shovel process
+  # lives inside the `rabbitmq` broker pods and opens an outbound AMQP
+  # connection to `rabbitmq-mlb` to read.
+  rabbitmqClusterReference:
+    name: rabbitmq
+    namespace: messaging

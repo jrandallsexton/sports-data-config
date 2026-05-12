@@ -9,3 +9,4 @@ resources:
   - rabbitmq-cluster-mlb.yaml
   - servicemonitor.yaml
   - ingressroute.yaml
+  - shovels
