@@ -4,8 +4,6 @@ kind: Kustomization
 resources:
   - operator.yaml
   - namespace.yaml
-  - rabbitmq-cluster.yaml
-  - rabbitmq-cluster-nfl.yaml
   - rabbitmq-cluster-api.yaml
   - rabbitmq-cluster-baseball-mlb.yaml
   - rabbitmq-cluster-football-ncaa.yaml
