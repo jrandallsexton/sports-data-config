@@ -72,6 +72,11 @@ spec:
     secretName: messaging-footballnfl-sportdeets-tls
 ---
 # MLB RabbitMQ Management UI — messaging-baseballmlb.sportdeets.com
+# Points at legacy `rabbitmq-mlb` Service during Round 1. Phase 5 of the
+# broker-detangle migration swaps the backend to `rabbitmq-baseball-mlb`
+# and deletes the old broker. New broker management UI is reachable via
+# `kubectl port-forward -n messaging svc/rabbitmq-baseball-mlb 15672:15672`
+# until that swap.
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -106,3 +111,42 @@ spec:
           port: 15672
   tls:
     secretName: messaging-baseballmlb-sportdeets-tls
+---
+# API RabbitMQ Management UI — messaging-api.sportdeets.com (new in Round 1)
+# Points at the new dedicated API broker `rabbitmq-api`. Added in Phase 2 of
+# the broker-detangle migration; persists post-migration as the canonical
+# API broker UI.
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rabbitmq-api-http
+  namespace: messaging
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`messaging-api.sportdeets.com`)
+      kind: Rule
+      middlewares:
+        - name: https-redirect
+          namespace: traefik
+      services:
+        - name: rabbitmq-api
+          port: 15672
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rabbitmq-api-https
+  namespace: messaging
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`messaging-api.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: rabbitmq-api
+          port: 15672
+  tls:
+    secretName: messaging-api-sportdeets-tls
