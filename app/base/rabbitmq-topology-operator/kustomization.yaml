@@ -27,3 +27,17 @@ kind: Kustomization
 
 resources:
   - https://github.com/rabbitmq/messaging-topology-operator/releases/download/v1.18.2/messaging-topology-operator-with-certmanager.yaml
+
+# Upstream MTO manifest declares the `rabbitmq-system` Namespace, which
+# the rabbitmq-cluster-operator manifest (app/base/rabbitmq/operator.yaml)
+# also declares. Kustomize doesn't merge duplicate resources, so drop the
+# MTO copy — the cluster-operator's Namespace declaration wins. All other
+# resources have distinct names (cluster-operator uses `rabbitmq-cluster-*`
+# prefixes; MTO uses `messaging-topology-operator-*`).
+patches:
+  - patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: rabbitmq-system
