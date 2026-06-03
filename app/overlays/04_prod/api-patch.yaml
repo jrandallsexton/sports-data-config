@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: api-all
-        image: sportdeets.azurecr.io/sportsdataapi:4616
+        image: sportdeets.azurecr.io/sportsdataapi:4647
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
