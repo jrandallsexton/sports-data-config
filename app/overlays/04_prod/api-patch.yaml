@@ -4,6 +4,7 @@ metadata:
   name: api-all
   namespace: default
 spec:
+  replicas: 0
   template:
     spec:
       containers:

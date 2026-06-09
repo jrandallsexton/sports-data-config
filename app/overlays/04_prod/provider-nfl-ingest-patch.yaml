@@ -4,6 +4,7 @@ metadata:
   name: provider-football-nfl-ingest
   namespace: default
 spec:
+  replicas: 0
   template:
     metadata:
       annotations:

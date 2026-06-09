@@ -4,6 +4,7 @@ metadata:
   name: web-ui
   namespace: default
 spec:
+  replicas: 0
   template:
     spec:
       containers:

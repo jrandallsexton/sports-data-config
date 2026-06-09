@@ -8,8 +8,8 @@ metadata:
     # target replica count while paused; KEDA treats its presence as
     # authoritative even when paused: "false", so it must be removed
     # (NOT left at "0") to resume normal scaling.
-    autoscaling.keda.sh/paused: "false"
-    # autoscaling.keda.sh/paused-replicas: "0"
+    autoscaling.keda.sh/paused: "true"
+    autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
     name: producer-baseball-mlb-worker

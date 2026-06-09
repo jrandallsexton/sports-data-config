@@ -4,6 +4,7 @@ metadata:
   name: jobs-dashboard
   namespace: default
 spec:
+  replicas: 0
   template:
     spec:
       containers:
