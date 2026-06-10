@@ -4,7 +4,7 @@ metadata:
   name: provider-football-ncaa-worker
   namespace: default
 spec:
-  replicas: 0
+  replicas: 1
   template:
     spec:
       containers:
