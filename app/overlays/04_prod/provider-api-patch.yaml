@@ -4,7 +4,7 @@ metadata:
   name: provider-football-ncaa-api
   namespace: default
 spec:
-  replicas: 0
+  replicas: 1
   template:
     spec:
       containers:
