@@ -1,0 +1,113 @@
+# Producer Daemon — hosts long-running, non-interruptible Hangfire jobs
+# (currently: CompetitionStreamerBase per-game live streamers). Listens
+# exclusively on the Hangfire "daemon" queue.
+#
+# This Deployment is intentionally NOT managed by a KEDA ScaledObject —
+# the whole point of the Daemon role is to keep streamer jobs running on
+# pods whose lifecycle is independent of message-queue depth. KEDA
+# scaling Worker pods down mid-game was the root cause of the 2026-06-13
+# MLB scoring miss; see docs/contest-finalization-reconcile-backstop.md
+# in the sports-data repo.
+#
+# replicas are set in the prod overlay patch, not here — initially 0
+# until the producer image carrying PR A's Daemon role wiring is
+# deployed, then bumped to 2 for stable HA.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-baseball-mlb-daemon
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: producer-baseball-mlb-daemon
+  template:
+    metadata:
+      labels:
+        app: producer-baseball-mlb-daemon
+        producer-role: daemon
+    spec:
+      # Long enough for Hangfire's ShutdownTimeout (90s, set in
+      # Core/ServiceRegistration.cs::AddHangfire) to signal cancellation
+      # to every in-flight streamer, then for the streamer's catch
+      # (rethrow path from PR A) to persist Failed state and propagate
+      # so Hangfire re-queues the job. Streamers do NOT finish their
+      # multi-hour work inside this window — they hand off cleanly via
+      # the cancellation+retry path.
+      terminationGracePeriodSeconds: 120
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: producer-baseball-mlb-daemon
+        image: sportdeets.azurecr.io/sportsdataproducer:3669
+        imagePullPolicy: IfNotPresent
+        command: ["dotnet"]
+        args: ["SportsData.Producer.dll", "-mode", "BaseballMlb", "-role", "Daemon"]
+        env:
+          - name: APPCONFIG_CONNSTR
+            valueFrom:
+              secretKeyRef:
+                name: azure-app-config-mlb
+                key: connectionstring
+          - name: AZURE_TENANT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_TENANT_ID
+          - name: AZURE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_ID
+          - name: AZURE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: azure-identity
+                key: AZURE_CLIENT_SECRET
+        envFrom:
+          - configMapRef:
+              name: app-config
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          timeoutSeconds: 10
+          failureThreshold: 3
+        # Streamers are I/O-bound (sleep, HTTP, sleep, HTTP). Sized well
+        # below the Worker (limits 2Gi / 2 CPU) since the workload is
+        # mostly Task.Delay between ESPN polls with occasional small
+        # DB writes for stream status.
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "500m"
+          requests:
+            memory: 256Mi
+            cpu: "100m"
+---
+# Protects against voluntary disruption (planned node drain, OS update,
+# manifest rollout) taking both daemon replicas down at once. Involuntary
+# disruption (OOM, node failure) bypasses this — that case is what the
+# FinalizationReconcileJob in PR E is designed to catch.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: producer-baseball-mlb-daemon-pdb
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: producer-baseball-mlb-daemon

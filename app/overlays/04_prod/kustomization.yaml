@@ -30,6 +30,7 @@ patchesStrategicMerge:
 - producer-nfl-ingest-patch.yaml
 - producer-nfl-api-patch.yaml
 - producer-mlb-patch.yaml
+- producer-mlb-daemon-patch.yaml
 - producer-mlb-ingest-patch.yaml
 - producer-mlb-api-patch.yaml
 - provider-patch.yaml
