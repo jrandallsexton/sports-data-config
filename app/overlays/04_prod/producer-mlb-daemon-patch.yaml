@@ -1,0 +1,24 @@
+# Prod overlay for the producer-baseball-mlb-daemon Deployment.
+#
+# replicas: 0 initially — the daemon role only exists on producer images
+# built from PR A (sports-data) or later. Bump to 2 once a new producer
+# image carrying the Daemon role wiring is available and tagged here.
+#
+# Until then, this deployment is registered in Flux but spawns no pods.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-baseball-mlb-daemon
+  namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/reconcile: enabled
+spec:
+  replicas: 0
+  template:
+    spec:
+      containers:
+      - name: producer-baseball-mlb-daemon
+        image: sportdeets.azurecr.io/sportsdataproducer:4689
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"

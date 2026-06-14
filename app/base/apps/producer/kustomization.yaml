@@ -14,6 +14,7 @@ resources:
 - scaledobject-football-nfl.yaml
 - row-count-cronjob.yaml
 - producer-baseball-mlb-worker.yaml
+- producer-baseball-mlb-daemon.yaml
 - producer-baseball-mlb-ingest.yaml
 - producer-baseball-mlb-api.yaml
 - producer-baseball-mlb-service.yaml
