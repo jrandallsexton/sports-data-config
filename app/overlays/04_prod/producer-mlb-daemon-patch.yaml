@@ -1,10 +1,12 @@
 # Prod overlay for the producer-baseball-mlb-daemon Deployment.
 #
-# replicas: 0 initially — the daemon role only exists on producer images
-# built from PR A (sports-data) or later. Bump to 2 once a new producer
-# image carrying the Daemon role wiring is available and tagged here.
+# Image tag is auto-bumped by .github/workflows/deploy-services-prod-auto.yml
+# in the sports-data repo (workflow includes this patch alongside the other
+# producer patches; see PR #418).
 #
-# Until then, this deployment is registered in Flux but spawns no pods.
+# Replicas: 2 for in-season HA — one alone is a SPOF against planned node
+# drain, OS update, OOM kill. Scale to 0 manually via Flux when out of
+# season; bump back when the next sport's season starts.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,7 +15,7 @@ metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/reconcile: enabled
 spec:
-  replicas: 0
+  replicas: 2
   template:
     spec:
       containers:
