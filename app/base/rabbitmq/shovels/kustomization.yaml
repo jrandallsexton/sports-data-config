@@ -24,8 +24,11 @@ kind: Kustomization
 
 resources:
   - shovel-baseball-play-completed-mlb-to-api.yaml
+  - shovel-contest-finalized-mlb-to-api.yaml
   - shovel-contest-status-changed-mlb-to-api.yaml
   - shovel-football-play-completed-ncaa-to-api.yaml
+  - shovel-contest-finalized-ncaa-to-api.yaml
   - shovel-contest-status-changed-ncaa-to-api.yaml
   - shovel-football-play-completed-nfl-to-api.yaml
+  - shovel-contest-finalized-nfl-to-api.yaml
   - shovel-contest-status-changed-nfl-to-api.yaml
