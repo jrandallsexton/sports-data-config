@@ -1,0 +1,23 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-contest-score-changed-mlb-to-api
+  namespace: messaging
+spec:
+  name: shovel-contest-score-changed-mlb-to-api
+  uriSecret:
+    name: shovel-baseball-mlb-to-api-credentials
+  # ContestScoreChanged is the SignalR fan-out trigger for live in-game
+  # score updates. Producer's CompetitorScoreUpdatedConsumerHandler
+  # publishes this after writing Contest.HomeScore/AwayScore; API's
+  # ContestScoreChangedHandler broadcasts via IHubContext.
+  # Generous prefetch — a tight game can burst dozens of score changes
+  # in a few minutes.
+  srcExchange: "SportsData.Core.Eventing.Events.Contests:ContestScoreChanged"
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests:ContestScoreChanged"
+  ackMode: "on-confirm"
+  srcPrefetchCount: 1000
+  rabbitmqClusterReference:
+    name: rabbitmq-api
+    namespace: messaging
