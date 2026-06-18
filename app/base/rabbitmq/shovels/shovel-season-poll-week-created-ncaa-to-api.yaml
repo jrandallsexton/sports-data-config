@@ -1,0 +1,20 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-season-poll-week-created-ncaa-to-api
+  namespace: messaging
+spec:
+  name: shovel-season-poll-week-created-ncaa-to-api
+  uriSecret:
+    name: shovel-football-ncaa-to-api-credentials
+  # SeasonPollWeekCreated lives under the Seasons namespace (not Contests).
+  # Only NCAA + NFL processors are registered for SeasonTypeWeekRankings;
+  # MLB has no poll/rankings concept so no MLB shovel.
+  srcExchange: "SportsData.Core.Eventing.Events.Seasons:SeasonPollWeekCreated"
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Seasons:SeasonPollWeekCreated"
+  ackMode: "on-confirm"
+  srcPrefetchCount: 1000
+  rabbitmqClusterReference:
+    name: rabbitmq-api
+    namespace: messaging

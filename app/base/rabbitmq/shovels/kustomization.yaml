@@ -21,14 +21,34 @@ kind: Kustomization
 # Round 1 (MLB+API) + Round 2 (football) migration context — each
 # sport-league + API gets its own dedicated broker; shovels bridge
 # integration events from each Producer broker to the API broker.
+#
+# Resources are grouped by source broker. Within each league block,
+# shovels are listed in event-name alphabetical order. SeasonPollWeekCreated
+# is NCAA + NFL only (no baseball poll/rankings concept).
 
 resources:
+  # MLB (rabbitmq-baseball-mlb -> rabbitmq-api)
   - shovel-baseball-play-completed-mlb-to-api.yaml
   - shovel-contest-finalized-mlb-to-api.yaml
+  - shovel-contest-odds-updated-mlb-to-api.yaml
+  - shovel-contest-score-changed-mlb-to-api.yaml
+  - shovel-contest-start-time-updated-mlb-to-api.yaml
   - shovel-contest-status-changed-mlb-to-api.yaml
-  - shovel-football-play-completed-ncaa-to-api.yaml
+
+  # NCAA football (rabbitmq-football-ncaa -> rabbitmq-api)
   - shovel-contest-finalized-ncaa-to-api.yaml
+  - shovel-contest-odds-updated-ncaa-to-api.yaml
+  - shovel-contest-score-changed-ncaa-to-api.yaml
+  - shovel-contest-start-time-updated-ncaa-to-api.yaml
   - shovel-contest-status-changed-ncaa-to-api.yaml
-  - shovel-football-play-completed-nfl-to-api.yaml
+  - shovel-football-play-completed-ncaa-to-api.yaml
+  - shovel-season-poll-week-created-ncaa-to-api.yaml
+
+  # NFL (rabbitmq-football-nfl -> rabbitmq-api)
   - shovel-contest-finalized-nfl-to-api.yaml
+  - shovel-contest-odds-updated-nfl-to-api.yaml
+  - shovel-contest-score-changed-nfl-to-api.yaml
+  - shovel-contest-start-time-updated-nfl-to-api.yaml
   - shovel-contest-status-changed-nfl-to-api.yaml
+  - shovel-football-play-completed-nfl-to-api.yaml
+  - shovel-season-poll-week-created-nfl-to-api.yaml

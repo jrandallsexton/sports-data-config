@@ -1,0 +1,17 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Shovel
+metadata:
+  name: shovel-contest-score-changed-ncaa-to-api
+  namespace: messaging
+spec:
+  name: shovel-contest-score-changed-ncaa-to-api
+  uriSecret:
+    name: shovel-football-ncaa-to-api-credentials
+  srcExchange: "SportsData.Core.Eventing.Events.Contests:ContestScoreChanged"
+  srcExchangeKey: ""
+  destExchange: "SportsData.Core.Eventing.Events.Contests:ContestScoreChanged"
+  ackMode: "on-confirm"
+  srcPrefetchCount: 1000
+  rabbitmqClusterReference:
+    name: rabbitmq-api
+    namespace: messaging
