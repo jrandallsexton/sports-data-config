@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: provider-baseball-mlb-worker
-        image: sportdeets.azurecr.io/sportsdataprovider:4767
+        image: sportdeets.azurecr.io/sportsdataprovider:4816
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
