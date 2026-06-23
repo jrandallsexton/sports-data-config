@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: provider-football-ncaa-api
-        image: sportdeets.azurecr.io/sportsdataprovider:4910
+        image: sportdeets.azurecr.io/sportsdataprovider:4917
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
