@@ -8,6 +8,7 @@ resources:
   - rabbitmq-cluster-baseball-mlb.yaml
   - rabbitmq-cluster-football-ncaa.yaml
   - rabbitmq-cluster-football-nfl.yaml
+  - rabbitmq-cluster-notification.yaml
   - servicemonitor.yaml
   - ingressroute.yaml
   - shovels
