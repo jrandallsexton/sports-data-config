@@ -21,7 +21,7 @@ spec:
           - name: APPCONFIG_CONNSTR
             valueFrom:
               secretKeyRef:
-                name: az-app-config
+                name: azure-app-config
                 key: connectionstring
         envFrom:
           - configMapRef:
