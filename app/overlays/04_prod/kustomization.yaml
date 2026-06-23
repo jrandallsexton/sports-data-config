@@ -17,6 +17,7 @@ resources:
 - ../../base/apps/provider
 - ../../base/apps/jobs-dashboard
 - ../../base/apps/web-ui
+- ../../base/apps/notification
 - ../../base/monitoring/prometheus
 - ../../base/monitoring/umami
 - ../../base/maintenance
@@ -44,6 +45,7 @@ patchesStrategicMerge:
 - provider-mlb-api-patch.yaml
 - web-ui-patch.yaml
 - jobs-dashboard-patch.yaml
+- notification-patch.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge

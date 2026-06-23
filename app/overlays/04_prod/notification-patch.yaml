@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: notification
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"
