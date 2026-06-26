@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - notification-deployment.yaml
 - notification-service.yaml
+- notification-ingressroute.yaml

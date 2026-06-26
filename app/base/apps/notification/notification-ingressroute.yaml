@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: notification-internal-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`notifications.sportdeets.com`) && !PathPrefix(`/.well-known/acme-challenge/`)
+      kind: Rule
+      services:
+        - name: notification-svc
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: notification-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`notifications.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: notification-svc
+          port: 80
+  tls:
+    secretName: notifications-sportdeets-tls
