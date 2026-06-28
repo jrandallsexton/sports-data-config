@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: notification
-        image: sportdeets.azurecr.io/sportsdatanotification:5020
+        image: sportdeets.azurecr.io/sportsdatanotification:5051
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
