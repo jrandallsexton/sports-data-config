@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: provider-baseball-mlb-ingest
-        image: sportdeets.azurecr.io/sportsdataprovider:5384
+        image: sportdeets.azurecr.io/sportsdataprovider:5446
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
