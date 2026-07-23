@@ -18,6 +18,3 @@ resources:
 - provider-baseball-mlb-api.yaml
 - provider-svc-baseball-mlb.yaml
 - scaledobject-baseball-mlb.yaml
-- provider-ingressroute.yaml
-- provider-ingressroute-nfl.yaml
-- provider-ingressroute-mlb.yaml

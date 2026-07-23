@@ -19,6 +19,3 @@ resources:
 - producer-baseball-mlb-api.yaml
 - producer-baseball-mlb-service.yaml
 - scaledobject-baseball-mlb.yaml
-- producer-ingressroute.yaml
-- producer-ingressroute-nfl.yaml
-- producer-ingressroute-mlb.yaml
