@@ -1,0 +1,26 @@
+# Prod overlay for the producer-football-nfl-daemon Deployment.
+#
+# Image tag is auto-bumped by .github/workflows/deploy-services-prod-auto.yml
+# in the sports-data repo (this patch is in the workflow's producer patch
+# list alongside the MLB daemon's).
+#
+# Replicas: 2 for in-season HA — one alone is a SPOF against planned node
+# drain, OS update, OOM kill. Scale to 0 manually via Flux when out of
+# season; bump back when the next sport's season starts.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-football-nfl-daemon
+  namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/reconcile: enabled
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: producer-football-nfl-daemon
+        image: sportdeets.azurecr.io/sportsdataproducer:5856
+        env:
+        - name: APPCONFIG_LABEL
+          value: "Prod"

@@ -25,9 +25,11 @@ resources:
 patchesStrategicMerge:
 - api-patch.yaml
 - producer-patch.yaml
+- producer-ncaa-daemon-patch.yaml
 - producer-ingest-patch.yaml
 - producer-api-patch.yaml
 - producer-nfl-patch.yaml
+- producer-nfl-daemon-patch.yaml
 - producer-nfl-ingest-patch.yaml
 - producer-nfl-api-patch.yaml
 - producer-mlb-patch.yaml

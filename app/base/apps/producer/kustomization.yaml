@@ -2,10 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - producer-football-ncaa-worker.yaml
+- producer-football-ncaa-daemon.yaml
 - producer-football-ncaa-ingest.yaml
 - producer-football-ncaa-api.yaml
 - producer-football-ncaa-service.yaml
 - producer-football-nfl-worker.yaml
+- producer-football-nfl-daemon.yaml
 - producer-football-nfl-ingest.yaml
 - producer-football-nfl-api.yaml
 - producer-football-nfl-service.yaml
