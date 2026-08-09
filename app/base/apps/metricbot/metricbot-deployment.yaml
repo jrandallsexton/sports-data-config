@@ -39,6 +39,11 @@ spec:
               secretKeyRef:
                 name: metricbot-secrets
                 key: metricbot-pg-port
+                # MetricBot defaults this to 5432 when unset, so a missing
+                # key should fall through to that default rather than
+                # blocking container creation (which produces a pod with
+                # no logs at all — the failure happens before startup).
+                optional: true
           - name: METRICBOT_PG_USER
             valueFrom:
               secretKeyRef:
