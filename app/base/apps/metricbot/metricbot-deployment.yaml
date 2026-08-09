@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metricbot
+  namespace: default
+  annotations:
+    # MetricBot is the deetsMeter prediction pipeline (Python/FastAPI).
+    # INTERNAL ONLY — no IngressRoute, same posture as producer/provider.
+    # The API's Hangfire owns scheduling and manual triggers; ad-hoc and
+    # parameterized experiment runs go through the API's admin proxy.
+    # Design: docs/metrics-modeling/metrics-microservice-deetsmeter.md
+    sportdeets.io/description: "deetsMeter prediction service (internal)"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metricbot
+  template:
+    metadata:
+      labels:
+        app: metricbot
+    spec:
+      containers:
+      - name: metricbot
+        image: sportsdatametricbot:latest
+        imagePullPolicy: IfNotPresent
+        # Secret keys follow the cluster convention (lower-kebab, service
+        # prefixed); the container needs conventional UPPER_SNAKE env
+        # vars, so the mapping is explicit here. MetricBot has no Azure
+        # AppConfig client by design — it reads plain env vars.
+        env:
+          - name: METRICBOT_PG_HOST
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-pg-host
+          - name: METRICBOT_PG_PORT
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-pg-port
+          - name: METRICBOT_PG_USER
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-pg-user
+          - name: METRICBOT_PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-pg-password
+          - name: METRICBOT_API_BASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-api-base-url
+          - name: METRICBOT_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: metricbot-secrets
+                key: metricbot-admin-token
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            # Training fits a LinearRegression over the full historical
+            # corpus (~60k rows x 64 features) in-process; pandas peaks
+            # well under this but headroom is cheap on a weekly job.
+            memory: 2Gi
+            cpu: "2"
+          requests:
+            memory: 512Mi
+            cpu: "0.2"

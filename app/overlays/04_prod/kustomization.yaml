@@ -18,6 +18,7 @@ resources:
 - ../../base/apps/jobs-dashboard
 - ../../base/apps/web-ui
 - ../../base/apps/notification
+- ../../base/apps/metricbot
 - ../../base/monitoring/prometheus
 - ../../base/monitoring/umami
 - ../../base/maintenance
@@ -48,6 +49,7 @@ patchesStrategicMerge:
 - web-ui-patch.yaml
 - jobs-dashboard-patch.yaml
 - notification-patch.yaml
+- metricbot-patch.yaml
 configMapGenerator:
   - name: app-config
     behavior: merge
