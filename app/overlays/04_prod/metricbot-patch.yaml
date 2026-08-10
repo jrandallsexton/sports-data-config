@@ -9,4 +9,4 @@ spec:
     spec:
       containers:
       - name: metricbot
-        image: sportdeets.azurecr.io/sportsdatametricbot:5984
+        image: sportdeets.azurecr.io/sportsdatametricbot:6021
