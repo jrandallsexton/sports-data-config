@@ -2,7 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflare-ddns
-  namespace: default
+  # monitoring, not default: default is sportDeets services only;
+  # this is cluster/infra plumbing.
+  namespace: monitoring
   annotations:
     # The public IP re-leases aggressively on the current ISP hardware;
     # every rotation is a silent prod outage (Cloudflare 522) until the

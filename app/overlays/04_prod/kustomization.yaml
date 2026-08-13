@@ -19,8 +19,8 @@ resources:
 - ../../base/apps/web-ui
 - ../../base/apps/notification
 - ../../base/apps/metricbot
-- ../../base/apps/cloudflare-ddns
 - ../../base/monitoring/prometheus
+- ../../base/monitoring/cloudflare-ddns
 - ../../base/monitoring/umami
 - ../../base/maintenance
 - ollama-config.yaml
