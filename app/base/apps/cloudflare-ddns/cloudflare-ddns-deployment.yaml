@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-ddns
+  namespace: default
+  annotations:
+    # The public IP re-leases aggressively on the current ISP hardware;
+    # every rotation is a silent prod outage (Cloudflare 522) until the
+    # A records catch up. This watches the public IP and updates the
+    # Cloudflare records via API, replacing manual DNS edits.
+    # Token: secret cloudflare-ddns (scoped to sportdeets.com,
+    # Zone.DNS Edit + Zone.Zone Read).
+    sportdeets.io/description: "Cloudflare dynamic DNS updater"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare-ddns
+  template:
+    metadata:
+      labels:
+        app: cloudflare-ddns
+    spec:
+      containers:
+      - name: cloudflare-ddns
+        image: favonia/cloudflare-ddns:1
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: CLOUDFLARE_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: cloudflare-ddns
+                key: CLOUDFLARE_API_TOKEN
+          - name: DOMAINS
+            value: "sportdeets.com,*.sportdeets.com,www.sportdeets.com"
+          # Existing A records are Cloudflare-proxied (orange cloud);
+          # without this the updater would flip them to DNS-only and
+          # expose the origin IP.
+          - name: PROXIED
+            value: "true"
+          # IPv4-only origin; do not create/maintain AAAA records.
+          - name: IP6_PROVIDER
+            value: "none"
+          # Default detection/update cadence (@every 5m) is fine; a
+          # rotation costs at most ~5 minutes of 522 instead of hours.
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: "0.1"
+          requests:
+            memory: 16Mi
+            cpu: "0.01"

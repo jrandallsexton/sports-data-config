@@ -19,6 +19,7 @@ resources:
 - ../../base/apps/web-ui
 - ../../base/apps/notification
 - ../../base/apps/metricbot
+- ../../base/apps/cloudflare-ddns
 - ../../base/monitoring/prometheus
 - ../../base/monitoring/umami
 - ../../base/maintenance
