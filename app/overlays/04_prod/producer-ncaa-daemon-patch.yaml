@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: producer-football-ncaa-daemon
-        image: sportdeets.azurecr.io/sportsdataproducer:6102
+        image: sportdeets.azurecr.io/sportsdataproducer:6106
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
