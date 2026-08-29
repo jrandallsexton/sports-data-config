@@ -6,7 +6,9 @@ metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/reconcile: enabled
 spec:
-  replicas: 1
+  # NO replicas here - scaled by KEDA (producer-baseball-mlb-worker-scaler).
+  # Setting it makes Flux reassert replicas: 1 every 5-minute reconcile and
+  # fight the HPA, killing pods mid-job on every cycle.
   template:
     metadata:
       annotations:

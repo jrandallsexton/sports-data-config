@@ -4,7 +4,13 @@ metadata:
   name: producer-football-ncaa-worker
   namespace: default
 spec:
-  replicas: 1
+  # NO replicas here. This deployment is scaled by the KEDA ScaledObject
+  # producer-football-ncaa-worker-scaler. Setting it made Flux and the HPA
+  # fight: every 5-minute reconcile reasserted replicas: 1, killing pods
+  # mid-job, and the HPA immediately scaled back up ("Current number of
+  # replicas below Spec.MinReplicas"). The base manifest already warns
+  # "replicas managed by KEDA ScaledObject - do not set here"; this overlay
+  # was quietly overriding it.
   template:
     metadata:
       annotations:

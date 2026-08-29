@@ -4,7 +4,9 @@ metadata:
   name: provider-football-nfl-worker
   namespace: default
 spec:
-  replicas: 1
+  # NO replicas here - scaled by KEDA (provider-football-nfl-worker-scaler).
+  # Setting it makes Flux reassert replicas: 1 every 5-minute reconcile and
+  # fight the HPA, killing pods mid-job on every cycle.
   template:
     metadata:
       annotations:
