@@ -4,10 +4,7 @@ metadata:
   name: provider-football-ncaa-api
   namespace: default
 spec:
-  # 2026-08-30 MAINTENANCE HOLD (Mongo migration to the new NUC).
-  # Held at 0 alongside worker and ingest so nothing can write to the document
-  # store mid-cutover. RESTORE TO 1 AFTER CUTOVER.
-  replicas: 0
+  replicas: 1
   template:
     spec:
       containers:
