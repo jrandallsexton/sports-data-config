@@ -4,6 +4,13 @@ metadata:
   name: provider-football-ncaa-worker-scaler
   namespace: default
   annotations:
+    # 2026-08-30 MAINTENANCE HOLD — Mongo migration to the new NUC.
+    # Provider writes every sourced document into Mongo, so all sourcing must
+    # stop for the duration or a resource-index sweep lands in a half-migrated
+    # store. Weekly ESPN index sweeps fire today at 10:00Z and 22:00Z, and
+    # SourcingJobOrchestrator runs every minute, so this cannot be left to
+    # chance. REMOVE THIS ANNOTATION to resume sourcing after the cutover.
+    autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
     name: provider-football-ncaa-worker

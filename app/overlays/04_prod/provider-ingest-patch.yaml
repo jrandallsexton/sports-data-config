@@ -4,7 +4,11 @@ metadata:
   name: provider-football-ncaa-ingest
   namespace: default
 spec:
-  replicas: 1
+  # 2026-08-30 MAINTENANCE HOLD (Mongo migration to the new NUC).
+  # Ingest consumes DocumentRequested off RabbitMQ and drives document writes
+  # into Mongo. Held at 0 so nothing sources mid-cutover. Messages accumulate
+  # in RabbitMQ and drain normally on restore. RESTORE TO 1 AFTER CUTOVER.
+  replicas: 0
   template:
     spec:
       containers:
