@@ -17,6 +17,31 @@ spec:
       - name: redis
         image: redis:7-alpine
         imagePullPolicy: IfNotPresent
+        # A cache must SHED entries under pressure, not die.
+        #
+        # Redis defaults to `maxmemory 0` (unlimited) with policy `noeviction`,
+        # so it never evicts — it grows until the container hits its memory limit
+        # and the kubelet OOMKills it. The entire cache is then lost at once and
+        # every entry rebuilds simultaneously, which is precisely when load is
+        # highest. Harmless while Redis held one key (the ESPN rate-limit
+        # bucket); not harmless once we cache application data.
+        #
+        # maxmemory sits BELOW the container limit so Redis's own eviction trips
+        # first and the pod stays up. allkeys-lru is right because everything
+        # stored is regenerable: evicting the least-recently-used entry costs one
+        # slow request, nothing more.
+        #
+        # The two load-bearing ESPN keys (espn:ratelimit:bucket,
+        # espn:circuit:open) share this instance and are technically evictable.
+        # LRU protects them in practice — both are touched on every ESPN request,
+        # making them the hottest keys in the store. If cache volume ever grows
+        # enough to make that uncomfortable, split ESPN state into its own tiny
+        # noeviction instance; see docs/audit/caching-vertical-2026-08.md.
+        args:
+          - "--maxmemory"
+          - "384mb"
+          - "--maxmemory-policy"
+          - "allkeys-lru"
         ports:
         - containerPort: 6379
           name: redis-server
@@ -36,8 +61,11 @@ spec:
           failureThreshold: 3
         resources:
           limits:
-            memory: 128Mi
+            # 512Mi against maxmemory 384mb leaves Redis headroom for its own
+            # overhead (client buffers, replication backlog, fragmentation) so
+            # eviction always trips before the kubelet does.
+            memory: 512Mi
             cpu: "250m"
           requests:
-            memory: 64Mi
+            memory: 128Mi
             cpu: "100m"
