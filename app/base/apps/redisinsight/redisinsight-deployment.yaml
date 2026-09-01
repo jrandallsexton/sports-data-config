@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisinsight
+  namespace: default
+  annotations:
+    sportdeets.io/description: "RedisInsight - web UI for the in-cluster Redis cache"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redisinsight
+  template:
+    metadata:
+      labels:
+        app: redisinsight
+    spec:
+      containers:
+      - name: redisinsight
+        image: redis/redisinsight:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5540
+          name: http
+        env:
+          # The cache connection is DECLARED here rather than added through the
+          # UI. RedisInsight persists UI-added connections in sqlite under
+          # /data, which would need a PVC plus RI_ENCRYPTION_KEY management;
+          # env-declared connections are re-applied on every boot, so the pod
+          # stays stateless (emptyDir) and the connection config lives in git.
+          - name: RI_REDIS_HOST
+            value: "cache-svc"
+          - name: RI_REDIS_PORT
+            value: "6379"
+          - name: RI_REDIS_ALIAS
+            value: "sportdeets-cache"
+          # Lock the UI: no adding/editing/deleting connections. Defense in
+          # depth behind the basic auth - a leaked credential cannot repoint
+          # RedisInsight at arbitrary in-cluster hosts. To add a database,
+          # declare another RI_REDIS_HOST1/PORT1/ALIAS1 set here instead.
+          - name: RI_DATABASE_MANAGEMENT
+            value: "false"
+          - name: RI_ACCEPT_TERMS_AND_CONDITIONS
+            value: "true"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 5540
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 5540
+          initialDelaySeconds: 30
+          periodSeconds: 30
+      volumes:
+      - name: data
+        # Deliberately ephemeral - see the env block. Losing this loses only
+        # Workbench command history, never the connection config.
+        emptyDir: {}

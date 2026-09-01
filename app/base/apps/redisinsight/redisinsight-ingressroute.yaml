@@ -1,0 +1,35 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: redisinsight-http
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`caching.sportdeets.com`) && !PathPrefix(`/.well-known/acme-challenge/`)
+      kind: Rule
+      middlewares:
+        - name: redisinsight-auth
+      services:
+        - name: redisinsight-svc
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: redisinsight-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`caching.sportdeets.com`)
+      kind: Rule
+      middlewares:
+        - name: redisinsight-auth
+      services:
+        - name: redisinsight-svc
+          port: 80
+  tls:
+    secretName: caching-sportdeets-tls

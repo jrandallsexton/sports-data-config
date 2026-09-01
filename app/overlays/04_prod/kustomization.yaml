@@ -16,6 +16,7 @@ resources:
 - ../../base/apps/producer
 - ../../base/apps/provider
 - ../../base/apps/jobs-dashboard
+- ../../base/apps/redisinsight
 - ../../base/apps/web-ui
 - ../../base/apps/notification
 - ../../base/apps/metricbot
