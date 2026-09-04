@@ -13,12 +13,20 @@ spec:
     repeatInterval: 12h
     receiver: 'email-notifications'
     routes:
+    # The Watchdog heartbeat fires FOREVER by design (dead-man's switch).
+    # The root route is a catch-all, so without this blackhole it would
+    # email every repeat_interval. First match wins.
+    - matchers:
+      - name: alertname
+        value: Watchdog
+      receiver: 'watchdog-null'
     - matchers:
       - name: severity
         value: critical
       receiver: 'email-notifications'
 
   receivers:
+  - name: 'watchdog-null'
   - name: 'email-notifications'
     emailConfigs:
     - to: 'admin@sportdeets.com'            # <--- CHANGE THIS: Where to send alerts

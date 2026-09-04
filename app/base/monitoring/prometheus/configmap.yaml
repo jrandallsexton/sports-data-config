@@ -128,16 +128,17 @@ data:
         externalUrl: https://admin.sportdeets.com/alertmanager/
         routePrefix: /
         # Select the global-alert-config AlertmanagerConfig CR (applied
-        # 2025-12; labeled release: kube-prometheus-stack). A NIL selector
-        # selects NOTHING — which is why the email receiver sat in the
-        # cluster ignored for 253 days while Alertmanager routed everything
-        # to "null" (found 2026-09-04).
+        # 2025-12; labeled release: kube-prometheus-stack) explicitly
+        # rather than relying on the match-all default.
         alertmanagerConfigSelector:
           matchLabels:
             release: kube-prometheus-stack
-        # Without this, the operator scopes the CR's routes to alerts with
-        # namespace=monitoring only — node/default-ns alerts would still
-        # go nowhere. None applies the CR's routes cluster-wide.
+        # THE 253-DAY BUG (found 2026-09-04): without this, the operator
+        # scopes the CR's routes to alerts with namespace=monitoring only —
+        # the email config was selected and live the whole time, but the
+        # auto-added namespace matcher excluded nearly every real alert
+        # (node alerts carry no namespace; app-job alerts carry default).
+        # None applies the CR's routes cluster-wide.
         alertmanagerConfigMatcherStrategy:
           type: None
 
