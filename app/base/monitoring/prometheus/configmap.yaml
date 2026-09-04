@@ -127,6 +127,31 @@ data:
       alertmanagerSpec:
         externalUrl: https://admin.sportdeets.com/alertmanager/
         routePrefix: /
+        # Select the global-alert-config AlertmanagerConfig CR (applied
+        # 2025-12; labeled release: kube-prometheus-stack). A NIL selector
+        # selects NOTHING — which is why the email receiver sat in the
+        # cluster ignored for 253 days while Alertmanager routed everything
+        # to "null" (found 2026-09-04).
+        alertmanagerConfigSelector:
+          matchLabels:
+            release: kube-prometheus-stack
+        # Without this, the operator scopes the CR's routes to alerts with
+        # namespace=monitoring only — node/default-ns alerts would still
+        # go nowhere. None applies the CR's routes cluster-wide.
+        alertmanagerConfigMatcherStrategy:
+          type: None
+
+    # k3s embeds the scheduler, controller-manager, and kube-proxy (v1.33
+    # +k3s1) — the chart's component monitors expect standalone pods and
+    # fire KubeSchedulerDown / KubeControllerManagerDown / KubeProxyDown
+    # as permanent false-positive criticals. Disable the monitors; the
+    # components' health is k3s's own concern.
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
 
     defaultRules:
       create: true
