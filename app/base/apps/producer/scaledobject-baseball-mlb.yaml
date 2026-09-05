@@ -25,7 +25,6 @@ spec:
           SELECT COUNT(*)::int
           FROM hangfire.jobqueue
           WHERE fetchedat IS NULL
-            AND queue = 'default'
         targetQueryValue: "30"
         activationTargetQueryValue: "1"
       authenticationRef:
