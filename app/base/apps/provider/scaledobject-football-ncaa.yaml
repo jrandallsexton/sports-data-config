@@ -18,14 +18,35 @@ spec:
     failureThreshold: 3  # After 3 consecutive trigger query failures, hold replicas
     replicas: 8          # Track max: a trigger blip during live games must
                          # hold at full drain speed, not half.
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        # Up fast; down after 10 sustained quiet minutes, 1 pod / 5 min -
+        # a terminating pod abandons in-flight Hangfire jobs. Rationale:
+        # producer/scaledobject-football-ncaa.yaml.
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Pods
+              value: 4
+              periodSeconds: 60
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 300
   triggers:
     - type: postgresql
       metadata:
-        # Query Hangfire database for pending jobs
+        # Outstanding work = unclaimed + in-flight, ALL queues (live
+        # sourcing rides the sticky '00-live' queue). Full rationale:
+        # producer/scaledobject-football-ncaa.yaml.
         query: >-
           SELECT COUNT(*)::int
           FROM hangfire.jobqueue
-          WHERE fetchedat IS NULL
+          WHERE (fetchedat IS NULL
+             OR fetchedat > now() - interval '5 minutes')
         targetQueryValue: "30"                # Scale up if >30 jobs per pod
         activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
       authenticationRef:

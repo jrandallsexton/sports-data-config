@@ -4,15 +4,9 @@ metadata:
   name: producer-football-ncaa-worker-scaler
   namespace: default
   annotations:
-    # 2026-08-29 IN-SEASON PIN. The trigger query below counts only *unclaimed*
-    # jobs, so 4 pods x 30 workers drain the visible queue to ~0 while 120 jobs
-    # are still executing; KEDA's 15s poll samples the trough and scales 4 -> 1,
-    # then back to 4 seconds later (observed 4->1 and 1->4 twelve seconds apart).
-    # Each cycle kills pods mid-job (ShutdownTimeout 90s), abandoning work that
-    # is requeued on invisibility timeout - the thrash manufactures its own
-    # backlog. Pinned at max for game day. REMOVE once the metric + behavior
-    # fixes land; see the scaler-thrash PR.
-    autoscaling.keda.sh/paused-replicas: "4"
+    # 2026-08-29 pin REMOVED 2026-09-06: the metric now counts in-flight
+    # work and the HPA behavior block prevents the trough-sampling thrash
+    # the pin guarded against (observed 4->1->4 twelve seconds apart).
 spec:
   scaleTargetRef:
     name: producer-football-ncaa-worker
@@ -24,15 +18,50 @@ spec:
   # readiness. Two keeps the queue drained through any single-pod event.
   minReplicaCount: 2
   maxReplicaCount: 4
+  fallback:
+    failureThreshold: 3  # After 3 consecutive trigger query failures, hold replicas
+    replicas: 4          # In-season: a trigger blip holds at max, not the floor
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        # Up fast - a real backlog is met immediately.
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Pods
+              value: 4
+              periodSeconds: 60
+        # Down slowly, one pod at a time: a terminating pod abandons its
+        # in-flight Hangfire jobs (requeued via invisibility timeout), so
+        # shedding capacity on a brief dip manufactures backlog. Ten
+        # sustained quiet minutes, then one pod per five minutes.
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 300
   triggers:
     - type: postgresql
       metadata:
-        # Query Hangfire database for pending jobs
+        # Outstanding work = unclaimed + in-flight, across ALL queues
+        # (live sourcing rides the sticky '00-live' priority queue -
+        # filtering to 'default' left KEDA blind to 46k live jobs on
+        # 2026-09-05). `fetchedat IS NULL` alone goes blind exactly when
+        # the fleet is busiest: workers claim rows as fast as they
+        # arrive, the visible depth collapses to ~0, and the 15s poll
+        # samples the trough and scales to the floor mid-slate. Hangfire
+        # deletes the row on completion, so the unfiltered count is true
+        # outstanding work; the age bound ignores claims orphaned by
+        # dead pods once they pass the invisibility window. With this
+        # signal, targetQueryValue 30 reads as "one pod's 30 workers are
+        # saturated" - the control the replica count actually wants.
         query: >-
           SELECT COUNT(*)::int
           FROM hangfire.jobqueue
-          WHERE fetchedat IS NULL
-        targetQueryValue: "30"                # Scale up if >30 jobs per pod
+          WHERE (fetchedat IS NULL
+             OR fetchedat > now() - interval '5 minutes')
+        targetQueryValue: "30"                # 30 outstanding jobs per pod = saturated
         activationTargetQueryValue: "1"       # Scale from minReplicas if any jobs
       authenticationRef:
         name: producer-hangfire-trigger-auth
