@@ -58,3 +58,26 @@ subsets:
     ports:
       - port: 1433
         name: producer-svc-db
+---
+# Headless Service for Ingest pods - Prometheus ServiceMonitor discovery.
+# The MassTransit consumers (DocumentRequestedHandler / DocumentCreatedHandler)
+# run in the Ingest role, so the intake counters added in sports-data #731
+# (provider.documents.requested / documents.received) are emitted HERE -
+# without this Service the ingest role was never scraped and those series
+# never reached Prometheus. Mirrors the worker-metrics Service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: producer-football-ncaa-ingest-metrics
+  namespace: default
+  labels:
+    app: producer-football-ncaa-ingest
+spec:
+  selector:
+    app: producer-football-ncaa-ingest
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  clusterIP: None

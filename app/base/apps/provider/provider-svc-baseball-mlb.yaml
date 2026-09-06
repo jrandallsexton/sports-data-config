@@ -32,3 +32,26 @@ spec:
     port: 8080
     targetPort: 8080
   clusterIP: None
+---
+# Headless Service for Ingest pods - Prometheus ServiceMonitor discovery.
+# The MassTransit consumers (DocumentRequestedHandler / DocumentCreatedHandler)
+# run in the Ingest role, so the intake counters added in sports-data #731
+# (provider.documents.requested / documents.received) are emitted HERE -
+# without this Service the ingest role was never scraped and those series
+# never reached Prometheus. Mirrors the worker-metrics Service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: provider-baseball-mlb-ingest-metrics
+  namespace: default
+  labels:
+    app: provider-baseball-mlb-ingest
+spec:
+  selector:
+    app: provider-baseball-mlb-ingest
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  clusterIP: None
