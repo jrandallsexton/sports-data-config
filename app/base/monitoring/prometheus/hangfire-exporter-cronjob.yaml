@@ -23,20 +23,27 @@ data:
 
     for DB in $DATABASES; do
       APP_NAME=$(echo "$DB" | cut -d'.' -f1 | sed 's/^sd//')
-      echo "Processing $DB (app=$APP_NAME)..."
+      # database label is MANDATORY: multiple Hangfire DBs share one app
+      # (sdProducer.FootballNcaa + sdProducer.FootballNfl are both
+      # app="Producer"), and without it the push contains duplicate
+      # series and pushgateway rejects the ENTIRE payload. That outage
+      # started the moment a second Producer DB held jobs (NFL, week 1
+      # 2026) and dark-screened the Hangfire dashboard.
+      DB_LABEL="${DB%.Hangfire}"
+      echo "Processing $DB (app=$APP_NAME, database=$DB_LABEL)..."
 
       QUEUES=$(psql -d "$DB" -t -A -q -c "SELECT queue, COUNT(*) FROM hangfire.jobqueue GROUP BY queue;" 2>/dev/null || true)
       for ROW in $QUEUES; do
         Q_NAME=$(echo "$ROW" | cut -d'|' -f1)
         Q_COUNT=$(echo "$ROW" | cut -d'|' -f2)
-        METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",queue=\"${Q_NAME}\"} ${Q_COUNT}\n"
+        METRICS="${METRICS}hangfire_queue_size{app=\"${APP_NAME}\",database=\"${DB_LABEL}\",queue=\"${Q_NAME}\"} ${Q_COUNT}\n"
       done
 
-      STATES=$(psql -d "$DB" -t -A -q -c "SELECT statename, COUNT(*) FROM hangfire.job GROUP BY statename;" 2>/dev/null || true)
+      STATES=$(psql -d "$DB" -t -A -q -c "SELECT COALESCE(statename, 'None'), COUNT(*) FROM hangfire.job GROUP BY 1;" 2>/dev/null || true)
       for ROW in $STATES; do
         S_NAME=$(echo "$ROW" | cut -d'|' -f1)
         S_COUNT=$(echo "$ROW" | cut -d'|' -f2)
-        METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",state=\"${S_NAME}\"} ${S_COUNT}\n"
+        METRICS="${METRICS}hangfire_job_state_count{app=\"${APP_NAME}\",database=\"${DB_LABEL}\",state=\"${S_NAME}\"} ${S_COUNT}\n"
       done
 
       SUCCEEDED_COUNT=0
@@ -48,8 +55,8 @@ data:
         if [ "$T_STATE" = "Succeeded" ]; then SUCCEEDED_COUNT=$T_COUNT; fi
         if [ "$T_STATE" = "Failed" ]; then FAILED_COUNT=$T_COUNT; fi
       done
-      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",state=\"Succeeded\"} ${SUCCEEDED_COUNT}\n"
-      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",state=\"Failed\"} ${FAILED_COUNT}\n"
+      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",database=\"${DB_LABEL}\",state=\"Succeeded\"} ${SUCCEEDED_COUNT}\n"
+      METRICS="${METRICS}hangfire_jobs_completed_5m{app=\"${APP_NAME}\",database=\"${DB_LABEL}\",state=\"Failed\"} ${FAILED_COUNT}\n"
     done
 
     echo "Generated metrics:"
@@ -58,7 +65,13 @@ data:
     if [ -n "$PUSHGATEWAY_URL" ]; then
       echo "Pushing to $PUSHGATEWAY_URL (PUT - full replace)..."
       printf "%b" "$METRICS" > /tmp/metrics.txt
-      curl -s -X PUT --data-binary @/tmp/metrics.txt "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"
+      # -f: a pushgateway rejection (e.g. duplicate series -> 400) must
+      # FAIL the job, not print the error body and report Completed -
+      # that silence hid this exporter's outage for a day.
+      if ! curl -sf -X PUT --data-binary @/tmp/metrics.txt "${PUSHGATEWAY_URL}/metrics/job/hangfire_metrics"; then
+        echo "Push REJECTED by pushgateway."
+        exit 1
+      fi
       echo "Push complete."
     else
       echo "PUSHGATEWAY_URL not set, skipping push."
