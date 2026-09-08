@@ -178,7 +178,7 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "code",
-              "expr": "sum(increase(provider_documents_skipped_seen_total{job=~\"$job\"}[$__rate_interval])) or vector(0)",
+              "expr": "sum(increase(provider_documents_skipped_seen_total[$__rate_interval])) or vector(0)",
               "legendFormat": "Skipped (Already Seen)",
               "range": true,
               "refId": "C"
