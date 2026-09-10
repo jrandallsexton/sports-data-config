@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: producer-baseball-mlb-daemon
-        image: sportdeets.azurecr.io/sportsdataproducer:7033
+        image: sportdeets.azurecr.io/sportsdataproducer:7038
         env:
         - name: APPCONFIG_LABEL
           value: "Prod"
