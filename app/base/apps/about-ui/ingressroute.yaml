@@ -1,0 +1,31 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: about-ui-https
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`about.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: about-ui-service
+          port: 80
+  tls:
+    secretName: about-sportdeets-tls
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: about-ui-http
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`about.sportdeets.com`)
+      kind: Rule
+      services:
+        - name: about-ui-service
+          port: 80

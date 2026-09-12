@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: about-ui
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: about-ui
+  template:
+    metadata:
+      labels:
+        app: about-ui
+    spec:
+      containers:
+      - name: about-ui
+        image: sportdeets.azurecr.io/sportsdataabout:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: about-ui-service
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: about-ui
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP

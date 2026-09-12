@@ -18,6 +18,7 @@ resources:
 - ../../base/apps/jobs-dashboard
 - ../../base/apps/redisinsight
 - ../../base/apps/web-ui
+- ../../base/apps/about-ui
 - ../../base/apps/notification
 - ../../base/apps/metricbot
 - ../../base/monitoring/prometheus
@@ -49,6 +50,7 @@ patchesStrategicMerge:
 - provider-mlb-ingest-patch.yaml
 - provider-mlb-api-patch.yaml
 - web-ui-patch.yaml
+- about-ui-patch.yaml
 - jobs-dashboard-patch.yaml
 - notification-patch.yaml
 - metricbot-patch.yaml
