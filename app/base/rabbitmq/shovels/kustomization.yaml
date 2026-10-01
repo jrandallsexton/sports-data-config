@@ -30,6 +30,7 @@ resources:
   # MLB (rabbitmq-baseball-mlb -> rabbitmq-api)
   - shovel-baseball-play-completed-mlb-to-api.yaml
   - shovel-contest-finalized-mlb-to-api.yaml
+  - shovel-contest-odds-created-mlb-to-api.yaml
   - shovel-contest-odds-updated-mlb-to-api.yaml
   - shovel-contest-score-changed-mlb-to-api.yaml
   - shovel-contest-start-time-updated-mlb-to-api.yaml
@@ -39,6 +40,7 @@ resources:
   # NCAA football (rabbitmq-football-ncaa -> rabbitmq-api)
   - shovel-athlete-stats-updated-ncaa-to-api.yaml
   - shovel-contest-finalized-ncaa-to-api.yaml
+  - shovel-contest-odds-created-ncaa-to-api.yaml
   - shovel-contest-odds-updated-ncaa-to-api.yaml
   - shovel-contest-score-changed-ncaa-to-api.yaml
   - shovel-contest-start-time-updated-ncaa-to-api.yaml
@@ -50,6 +52,7 @@ resources:
   # NFL (rabbitmq-football-nfl -> rabbitmq-api)
   - shovel-athlete-stats-updated-nfl-to-api.yaml
   - shovel-contest-finalized-nfl-to-api.yaml
+  - shovel-contest-odds-created-nfl-to-api.yaml
   - shovel-contest-odds-updated-nfl-to-api.yaml
   - shovel-contest-score-changed-nfl-to-api.yaml
   - shovel-contest-start-time-updated-nfl-to-api.yaml
