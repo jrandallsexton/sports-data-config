@@ -47,6 +47,7 @@ resources:
   - shovel-contest-status-changed-ncaa-to-api.yaml
   - shovel-football-play-completed-ncaa-to-api.yaml
   - shovel-franchise-season-enrichment-completed-ncaa-to-api.yaml
+  - shovel-play-analysis-generated-ncaa-to-api.yaml
   - shovel-season-poll-week-created-ncaa-to-api.yaml
 
   # NFL (rabbitmq-football-nfl -> rabbitmq-api)
@@ -59,4 +60,5 @@ resources:
   - shovel-contest-status-changed-nfl-to-api.yaml
   - shovel-football-play-completed-nfl-to-api.yaml
   - shovel-franchise-season-enrichment-completed-nfl-to-api.yaml
+  - shovel-play-analysis-generated-nfl-to-api.yaml
   - shovel-season-poll-week-created-nfl-to-api.yaml
