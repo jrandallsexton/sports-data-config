@@ -16,3 +16,5 @@ resources:
   - dashboard-node-fleet.yaml
   - dashboard-document-processing.yaml
   - hangfire-exporter-cronjob.yaml
+  - node-alerts.yaml
+  - scrape-alerts.yaml

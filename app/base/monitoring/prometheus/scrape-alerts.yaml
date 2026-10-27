@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: app-scrape-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+  - name: app-scrape
+    rules:
+    # A target can report up == 1 while its /metrics body is empty (e.g. an
+    # OpenTelemetry Prometheus exporter version skew). up alone won't catch it.
+    - alert: AppMetricsEndpointEmpty
+      expr: max by (job) (scrape_samples_scraped{job=~"api-service|producer-.*|provider-.*"}) == 0
+      for: 15m
+      labels:
+        severity: critical
+      annotations:
+        summary: "{{ $labels.job }} is serving an empty /metrics"
+        description: "Every {{ $labels.job }} target has scraped 0 samples for 15 minutes while still reporting up. Check the OpenTelemetry Prometheus exporter version against the core SDK in SportsData.Core.csproj."
