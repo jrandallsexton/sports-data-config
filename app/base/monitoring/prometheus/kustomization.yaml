@@ -15,6 +15,7 @@ resources:
   - dashboard-espn-cache-performance.yaml
   - dashboard-node-fleet.yaml
   - dashboard-document-processing.yaml
+  - dashboard-postgres.yaml
   - hangfire-exporter-cronjob.yaml
   - node-alerts.yaml
   - scrape-alerts.yaml
