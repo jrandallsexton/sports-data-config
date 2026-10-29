@@ -18,3 +18,4 @@ resources:
   - hangfire-exporter-cronjob.yaml
   - node-alerts.yaml
   - scrape-alerts.yaml
+  - postgres-exporter.yaml
