@@ -8,9 +8,6 @@ metadata:
 spec:
   replicas: 1
   template:
-    metadata:
-      annotations:
-        kubectl.kubernetes.io/restartedAt: "2026-04-08T11:30:00Z"
     spec:
       containers:
       - name: producer-baseball-mlb-ingest
